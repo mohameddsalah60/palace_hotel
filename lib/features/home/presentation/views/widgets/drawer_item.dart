@@ -38,7 +38,7 @@ class DrawerItem extends StatelessWidget {
               drawerItemEntity.title,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
-              style: AppTextStyles.fontWeight600Size16.copyWith(
+              style: AppTextStyles.fontWeight600Size16(context).copyWith(
                 color: isSelected ? AppColors.darkBlue : AppColors.grey,
               ),
             ),

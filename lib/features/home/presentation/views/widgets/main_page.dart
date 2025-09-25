@@ -25,7 +25,7 @@ class MainPage extends StatelessWidget {
                     Center(
                       child: Text(
                         'صفحة ${context.read<PageChangedCubit>().items[index].title} قيد التطوير',
-                        style: AppTextStyles.fontWeight700Size16,
+                        style: AppTextStyles.fontWeight700Size16(context),
                       ),
                     );
               },

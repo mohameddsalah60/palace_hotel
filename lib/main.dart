@@ -2,14 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:palace_systeam_managment/core/services/local_database.dart';
 import 'package:palace_systeam_managment/features/home/presentation/cubits/page_changed_cubit.dart';
+import 'package:intl/intl_standalone.dart'
+    if (dart.library.html) 'package:intl/intl_browser.dart';
 
+import 'core/di/getit_service_loacator.dart';
 import 'core/routing/app_router.dart';
 import 'core/routing/app_routes.dart';
+import 'core/services/observer_bloc.dart';
 import 'core/utils/app_colors.dart';
 import 'generated/l10n.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseHelper.instance.database;
+  Bloc.observer = MyBlocObserver();
+  await setup();
+  await findSystemLocale();
   runApp(const PalaceSysteamManagment());
 }
 

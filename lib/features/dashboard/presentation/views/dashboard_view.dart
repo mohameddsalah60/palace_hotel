@@ -31,7 +31,9 @@ class DashboardView extends StatelessWidget {
                       children: [
                         Text(
                           'نظرة عامة',
-                          style: AppTextStyles.fontWeight600Size16.copyWith(
+                          style: AppTextStyles.fontWeight600Size16(
+                            context,
+                          ).copyWith(
                             color: AppColors.blackLight,
                             fontSize: 20.sp,
                           ),
@@ -44,11 +46,12 @@ class DashboardView extends StatelessWidget {
                               children: [
                                 Text(
                                   'مجموع',
-                                  style: AppTextStyles.fontWeight400Size14
-                                      .copyWith(
-                                        color: AppColors.greyDark,
-                                        fontSize: 16.sp,
-                                      ),
+                                  style: AppTextStyles.fontWeight400Size14(
+                                    context,
+                                  ).copyWith(
+                                    color: AppColors.greyDark,
+                                    fontSize: 16.sp,
+                                  ),
                                 ),
                                 SizedBox(height: 16.h),
                                 Row(
@@ -57,20 +60,22 @@ class DashboardView extends StatelessWidget {
                                   children: [
                                     Text(
                                       "150",
-                                      style: AppTextStyles.fontWeight700Size16
-                                          .copyWith(
-                                            color: AppColors.darkBlue,
-                                            fontSize: 24.sp,
-                                          ),
+                                      style: AppTextStyles.fontWeight700Size16(
+                                        context,
+                                      ).copyWith(
+                                        color: AppColors.darkBlue,
+                                        fontSize: 24.sp,
+                                      ),
                                     ),
                                     SizedBox(width: 8.w),
                                     Text(
                                       "غرفة متاحة",
-                                      style: AppTextStyles.fontWeight500Size14
-                                          .copyWith(
-                                            color: AppColors.grey,
-                                            fontSize: 18.sp,
-                                          ),
+                                      style: AppTextStyles.fontWeight500Size14(
+                                        context,
+                                      ).copyWith(
+                                        color: AppColors.grey,
+                                        fontSize: 18.sp,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -102,7 +107,9 @@ class DateHeaderPage extends StatelessWidget {
       child: Center(
         child: Text(
           'الاثنين ،١١ مارس ٢٠٢٥',
-          style: AppTextStyles.fontWeight600Size16.copyWith(fontSize: 20.sp),
+          style: AppTextStyles.fontWeight600Size16(
+            context,
+          ).copyWith(fontSize: 20.sp),
         ),
       ),
     );

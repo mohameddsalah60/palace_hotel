@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:palace_systeam_managment/features/dashboard/presentation/views/dashboard_view.dart';
 
+import '../../../rooms/presentation/views/rooms_view.dart';
 import '../../domin/entites/drawer_item_entity.dart';
 part 'page_changed_state.dart';
 
 class PageChangedCubit extends Cubit<PageChangedState> {
   PageChangedCubit() : super(PageChangedInitial());
   final List<DrawerItemEntity> items = [
+    // DrawerItemEntity(
+    //   title: 'اللوحة الرئيسية',
+    //   icon: Icons.dashboard_outlined,
+    //   page: DashboardView(),
+    // ),
     DrawerItemEntity(
-      title: 'اللوحة الرئيسية',
-      icon: Icons.dashboard_outlined,
-      page: DashboardView(),
+      title: 'إدارة الغرف',
+      icon: Icons.bookmark_border,
+      page: RoomsView(),
     ),
-    DrawerItemEntity(title: 'إدارة الغرف', icon: Icons.bookmark_border),
     DrawerItemEntity(
       title: 'إدارة الحجوزات',
       icon: Icons.receipt_long_outlined,
