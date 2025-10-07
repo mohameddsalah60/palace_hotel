@@ -12,23 +12,22 @@ class MainPage extends StatelessWidget {
     return BlocBuilder<PageChangedCubit, PageChangedState>(
       builder: (context, state) {
         if (state is PageChangedSuccess) {
+          final cubit = context.read<PageChangedCubit>();
+
           return Expanded(
             flex: 5,
-            child: PageView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: context.read<PageChangedCubit>().items.length,
-              itemBuilder: (context, index) {
-                return context
-                        .read<PageChangedCubit>()
-                        .items[context.read<PageChangedCubit>().activeIndex]
-                        .page ??
-                    Center(
-                      child: Text(
-                        'صفحة ${context.read<PageChangedCubit>().items[index].title} قيد التطوير',
-                        style: AppTextStyles.fontWeight700Size16(context),
-                      ),
-                    );
-              },
+            child: IndexedStack(
+              index: cubit.activeIndex,
+              children:
+                  cubit.items.map((item) {
+                    return item.page ??
+                        Center(
+                          child: Text(
+                            'صفحة ${item.title} قيد التطوير',
+                            style: AppTextStyles.fontWeight700Size16(context),
+                          ),
+                        );
+                  }).toList(),
             ),
           );
         }

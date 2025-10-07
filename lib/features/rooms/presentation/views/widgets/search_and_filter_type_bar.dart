@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../../core/widgets/custom_search_field.dart';
 import '../../cubits/rooms_cubit.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_text_styles.dart';
@@ -22,22 +23,9 @@ class SearchAndFilterTypeBar extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: TextField(
+            child: CustomSearchField(
               onChanged: onChanged,
-              style: AppTextStyles.fontWeight400Size14(
-                context,
-              ).copyWith(color: AppColors.blackLight, fontSize: 18.sp),
-              decoration: InputDecoration(
-                hintText: 'ابحث عن غرفة',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                  borderSide: BorderSide.none,
-                ),
-                fillColor: AppColors.greyBorder,
-                filled: true,
-                contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
-                suffixIcon: Icon(Icons.search, color: AppColors.blackLight),
-              ),
+              hintText: 'ابحث عن غرفة',
             ),
           ),
           SizedBox(width: 8.w),

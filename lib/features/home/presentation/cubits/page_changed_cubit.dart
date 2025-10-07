@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:palace_systeam_managment/features/booking_management/presentation/views/booking_management_view.dart';
 
+import '../../../customers/presentation/views/customers_view.dart';
 import '../../../rooms/presentation/views/rooms_view.dart';
 import '../../domin/entites/drawer_item_entity.dart';
 part 'page_changed_state.dart';
@@ -21,8 +23,13 @@ class PageChangedCubit extends Cubit<PageChangedState> {
     DrawerItemEntity(
       title: 'إدارة الحجوزات',
       icon: Icons.receipt_long_outlined,
+      page: BookingManagementView(),
     ),
-    DrawerItemEntity(title: 'العملاء', icon: Icons.people_alt_outlined),
+    DrawerItemEntity(
+      title: 'إدارة النزلاء',
+      icon: Icons.people_alt_outlined,
+      page: CustomersView(),
+    ),
     DrawerItemEntity(title: 'حول البرنامج', icon: Icons.info_outline),
     DrawerItemEntity(title: 'الإعدادات', icon: Icons.settings_outlined),
   ];

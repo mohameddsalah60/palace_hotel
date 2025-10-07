@@ -9,10 +9,12 @@ class CustomTextFromField extends StatelessWidget {
     required this.icon,
     this.controller,
     this.keyboardType,
+    this.focusNode,
     this.validator,
     this.onChanged,
     this.isReadOnly = false,
     this.maxLines,
+    this.buildCounter,
   });
   final String labelText;
   final IconData icon;
@@ -22,9 +24,19 @@ class CustomTextFromField extends StatelessWidget {
   final void Function(String)? onChanged;
   final bool isReadOnly;
   final int? maxLines;
+  final FocusNode? focusNode;
+  final Widget? Function(
+    BuildContext, {
+    required int currentLength,
+    required bool isFocused,
+    required int? maxLength,
+  })?
+  buildCounter;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      focusNode: focusNode,
+      buildCounter: buildCounter,
       maxLines: maxLines ?? 1,
       readOnly: isReadOnly,
       onChanged: onChanged,

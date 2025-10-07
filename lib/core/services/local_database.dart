@@ -26,8 +26,6 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = p.join(dbPath, fileName);
 
-    print("✅ Database created/opened at: $path");
-
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
@@ -42,6 +40,35 @@ class DatabaseHelper {
         statusRoom TEXT NOT NULL
       )
     ''');
+
+    await db.execute('''
+    CREATE TABLE bookings(
+      bookingID INTEGER PRIMARY KEY AUTOINCREMENT,
+      guestName TEXT NOT NULL,
+      guestName2 TEXT,
+      roomID INTEGER NOT NULL,
+      checkInDate TEXT NOT NULL,
+      checkOutDate TEXT NOT NULL,
+      nightsCount INTEGER NOT NULL,       
+      pricePerNight REAL NOT NULL,
+      totalPrice REAL NOT NULL,
+      employeeName TEXT NOT NULL,
+      paidAmount REAL NOT NULL DEFAULT 0,
+      paidType TEXT NOT NULL,
+      notes TEXT,
+      FOREIGN KEY (roomID) REFERENCES rooms (roomId) ON DELETE CASCADE
+    )
+  ''');
+
+    await db.execute('''
+    CREATE TABLE custmers(
+      nationalId TEXT PRIMARY KEY,
+      nameCustmer TEXT NOT NULL,
+      phoneCustmer TEXT NOT NULL,
+      jobCustmer TEXT NOT NULL,
+      addressCustmer TEXT NOT NULL
+    )
+  ''');
   }
 
   // 🟢 Insert
@@ -66,7 +93,7 @@ class DatabaseHelper {
     required String table,
     required Map<String, dynamic> row,
     required String idColumn,
-    required int id,
+    required dynamic id,
   }) async {
     final db = await instance.database;
     return await db.update(table, row, where: '$idColumn = ?', whereArgs: [id]);
@@ -76,7 +103,7 @@ class DatabaseHelper {
   Future<int> deleteData({
     required String table,
     required String idColumn,
-    required int id,
+    required dynamic id,
   }) async {
     final db = await instance.database;
     return await db.delete(table, where: '$idColumn = ?', whereArgs: [id]);

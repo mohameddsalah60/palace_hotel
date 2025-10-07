@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:palace_systeam_managment/core/di/getit_service_loacator.dart';
-import 'package:palace_systeam_managment/core/utils/app_colors.dart';
-import 'package:palace_systeam_managment/features/rooms/presentation/cubits/rooms_cubit.dart';
 
-import 'widgets/new_room_form_dialog.dart';
-import 'widgets/rooms_view_body.dart';
+import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/custom_floating_action_button.dart';
+import '../cubits/custmers_cubit.dart';
+import 'widgets/custmer_details_dialog.dart';
+import 'widgets/customers_view_body.dart';
 
-class RoomsView extends StatelessWidget {
-  const RoomsView({super.key});
+class CustomersView extends StatelessWidget {
+  const CustomersView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: getIt<RoomsCubit>(),
+      value: getIt<CustmersCubit>(),
       child: Scaffold(
         backgroundColor: AppColors.wheitDark,
         floatingActionButton: CustomFloatingActionButton(
-          child: NewRoomFormDialog(),
+          child: CustmerDetailsDialog(),
         ),
-        body: RoomsViewBody(),
+        body: CustomersViewBody(),
       ),
     );
   }

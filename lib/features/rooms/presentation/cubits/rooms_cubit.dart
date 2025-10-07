@@ -8,8 +8,9 @@ import 'package:palace_systeam_managment/features/rooms/domin/repos/new_room_rep
 part 'rooms_state.dart';
 
 class RoomsCubit extends Cubit<RoomsState> {
-  RoomsCubit(this.roomsRepo, this.newRoomRepo) : super(RoomsInitial());
-
+  RoomsCubit(this.roomsRepo, this.newRoomRepo) : super(RoomsInitial()) {
+    fetchRooms();
+  }
   final RoomsRepo roomsRepo;
   final NewRoomRepo newRoomRepo;
 
