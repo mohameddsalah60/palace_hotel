@@ -43,7 +43,11 @@ class CustomersViewHeader extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => const CustmerDetailsDialog(),
-              );
+              ).then((_) {
+                if (context.mounted) {
+                  context.read<CustmersCubit>().clearControllers();
+                }
+              });
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 13.r, horizontal: 24.r),

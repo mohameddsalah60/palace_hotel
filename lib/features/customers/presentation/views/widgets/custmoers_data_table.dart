@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:palace_systeam_managment/core/widgets/custom_alert_dialog.dart';
 import 'package:palace_systeam_managment/features/customers/domin/entites/customer_entity.dart';
 import 'package:palace_systeam_managment/features/customers/presentation/cubits/custmers_cubit.dart';
 import 'package:palace_systeam_managment/features/customers/presentation/views/widgets/custmer_details_dialog.dart';
@@ -103,8 +104,17 @@ class CustmoersDataTable extends StatelessWidget {
                       tooltip: 'حذف',
                       icon: Icons.delete,
                       onPressed: () {
-                        context.read<CustmersCubit>().deleteCustmer(
-                          customerEntity[index],
+                        customAlertDialog(
+                          context,
+                          'هل انت متآكد من حذف بيانات العميل؟',
+                          'تاكيد التغييرات',
+                          AppColors.penaltyRed,
+                          () {
+                            context.read<CustmersCubit>().deleteCustmer(
+                              customerEntity[index],
+                            );
+                            Navigator.pop(context);
+                          },
                         );
                       },
                     ),

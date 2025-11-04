@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../../core/utils/app_colors.dart';
+import 'package:palace_systeam_managment/features/rooms/presentation/views/widgets/custom_drop_down_button_field.dart';
 import '../../../../../core/widgets/custom_text_from_field.dart';
 import '../../cubits/rooms_cubit.dart';
 
@@ -10,16 +9,23 @@ class NewRoomBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final form = context.read<RoomsCubit>().formController;
+
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.3,
       child: SingleChildScrollView(
         child: Form(
-          key: context.read<RoomsCubit>().formKey,
+          key: form.formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // رقم الغرفة
               CustomTextFromField(
-                controller: context.read<RoomsCubit>().roomIdController,
+                isReadOnly: context.read<RoomsCubit>().allRooms.any(
+                  (room) =>
+                      room.roomId.toString() == form.roomIdController.text,
+                ),
+                controller: form.roomIdController,
                 keyboardType: TextInputType.number,
                 labelText: 'رقم الغرفة',
                 icon: Icons.meeting_room_outlined,
@@ -34,38 +40,46 @@ class NewRoomBody extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 16),
-              // حقل نوع الغرفة
-              CustomTextFromField(
-                controller: context.read<RoomsCubit>().typeRoomController,
-                labelText: 'نوع الغرفة',
-                icon: Icons.category_outlined,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'هذا الحقل مطلوب';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              // حقل الطابق
-              CustomTextFromField(
-                controller: context.read<RoomsCubit>().floorRoomController,
-                keyboardType: TextInputType.number,
-                labelText: 'الطابق',
-                icon: Icons.apartment_outlined,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'هذا الحقل مطلوب';
-                  }
 
-                  return null;
+              // نوع الغرفة
+              Customdropdownbuttonfield(
+                value: form.selectedType,
+                labelText: 'نوع الغرفة',
+                items:
+                    form.roomTypes.map((String type) {
+                      return DropdownMenuItem<String>(
+                        value: type,
+                        child: Text(type),
+                      );
+                    }).toList(),
+                onChanged: (String? newValue) {
+                  form.selectedType = newValue ?? form.selectedType;
                 },
+                icon: Icons.category_outlined,
               ),
               const SizedBox(height: 16),
-              // حقل الوصف
+
+              // دور الغرفة
+              Customdropdownbuttonfield(
+                value: form.selectedFloorRoom,
+                labelText: 'دور الغرفة',
+                items:
+                    form.roomFloors.map((String floor) {
+                      return DropdownMenuItem<String>(
+                        value: floor,
+                        child: Text(floor),
+                      );
+                    }).toList(),
+                onChanged: (String? newValue) {
+                  form.selectedFloorRoom = newValue ?? form.selectedFloorRoom;
+                },
+                icon: Icons.location_city_outlined,
+              ),
+              const SizedBox(height: 16),
+
+              // وصف الغرفة
               CustomTextFromField(
-                controller:
-                    context.read<RoomsCubit>().descriptionRoomController,
+                controller: form.descriptionRoomController,
                 labelText: 'وصف الغرفة',
                 icon: Icons.description_outlined,
                 validator: (value) {
@@ -76,9 +90,10 @@ class NewRoomBody extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 16),
-              // حقل السعر
+
+              // السعر لكل ليلة
               CustomTextFromField(
-                controller: context.read<RoomsCubit>().priceController,
+                controller: form.priceController,
                 keyboardType: TextInputType.number,
                 labelText: 'السعر لكل ليلة',
                 icon: Icons.attach_money_outlined,
@@ -93,54 +108,20 @@ class NewRoomBody extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                value: context.read<RoomsCubit>().selectedStatus,
-                decoration: InputDecoration(
-                  labelText: 'الحالة',
-                  prefixIcon: Icon(
-                    Icons.info_outline,
-                    color: AppColors.greyDark,
-                  ),
-                  fillColor: AppColors.greyBorder,
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: const BorderSide(
-                      color: AppColors.mainBlue,
-                      width: 2,
-                    ),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  errorStyle: const TextStyle(color: Colors.red),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: const BorderSide(color: Colors.red, width: 2),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: const BorderSide(color: Colors.red, width: 2),
-                  ),
-                ),
+
+              // حالة الغرفة
+              Customdropdownbuttonfield(
+                value: form.selectedStatus,
+                labelText: 'حالة الغرفة',
                 items:
-                    context.read<RoomsCubit>().statuses.map((String status) {
+                    form.statuses.map((String status) {
                       return DropdownMenuItem<String>(
                         value: status,
                         child: Text(status),
                       );
                     }).toList(),
                 onChanged: (String? newValue) {
-                  context.read<RoomsCubit>().setSelectedStatus(newValue);
+                  form.selectedStatus = newValue ?? form.selectedStatus;
                 },
               ),
             ],

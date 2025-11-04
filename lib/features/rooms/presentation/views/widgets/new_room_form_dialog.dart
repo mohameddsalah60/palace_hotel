@@ -12,8 +12,8 @@ class NewRoomFormDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: getIt<RoomsCubit>()..initialStartDialog(roomEntity),
-      child: NewrRoomBlocBuilder(),
+      value: getIt<RoomsCubit>()..formController.initFromRoom(roomEntity),
+      child: NewrRoomBlocBuilder(roomEntity: roomEntity),
     );
   }
 }

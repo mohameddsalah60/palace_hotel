@@ -10,7 +10,7 @@ class CustomDateTimeFormField extends StatelessWidget {
   final DateTime? initialDate;
   final Function(DateTime?) onChanged;
   final IconData? suffixIcon;
-
+  final Color? colorIcon;
   const CustomDateTimeFormField({
     super.key,
     required this.labelText,
@@ -19,6 +19,7 @@ class CustomDateTimeFormField extends StatelessWidget {
     this.initialDate,
     required this.onChanged,
     this.suffixIcon,
+    this.colorIcon,
   });
 
   @override
@@ -31,7 +32,7 @@ class CustomDateTimeFormField extends StatelessWidget {
         labelText: labelText,
         prefixIcon:
             suffixIcon != null
-                ? Icon(suffixIcon, color: AppColors.greyDark)
+                ? Icon(suffixIcon, color: colorIcon ?? AppColors.greyDark)
                 : null,
         filled: true,
         fillColor: AppColors.greyBorder,

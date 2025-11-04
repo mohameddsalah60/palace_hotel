@@ -9,6 +9,10 @@ final class BookingRoomLoading extends BookingRoomState {}
 
 final class BookingRoomSuccess extends BookingRoomState {}
 
+final class UpdateStateBooking extends BookingRoomState {}
+
+final class DeleteBooking extends BookingRoomState {}
+
 final class BookingGetDataSuccess extends BookingRoomState {
   final List<BookingEntity> bookings;
   BookingGetDataSuccess({required this.bookings});

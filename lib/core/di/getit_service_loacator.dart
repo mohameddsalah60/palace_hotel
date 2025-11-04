@@ -5,7 +5,8 @@ import 'package:palace_systeam_managment/features/customers/domin/repos/custmer_
 import 'package:palace_systeam_managment/features/rooms/data/repos/new_room_repo_impl.dart';
 import 'package:palace_systeam_managment/features/rooms/domin/repos/new_room_repo.dart';
 import 'package:palace_systeam_managment/features/rooms/domin/repos/rooms_repo.dart';
-import 'package:palace_systeam_managment/features/rooms/presentation/cubits/booking_room_cubit.dart';
+import 'package:palace_systeam_managment/features/booking_management/presentation/cubits/booking_room_cubit.dart';
+import 'package:palace_systeam_managment/features/rooms/presentation/cubits/extend_the_stay_cubit.dart';
 import 'package:palace_systeam_managment/features/rooms/presentation/cubits/rooms_cubit.dart';
 
 import '../../features/customers/data/repos/custmer_repo_impl.dart';
@@ -21,6 +22,9 @@ Future<void> setup() async {
   getIt.registerSingleton<BookingRepo>(BookingRepoImpl());
   getIt.registerLazySingleton<RoomsCubit>(
     () => RoomsCubit(getIt<RoomsRepo>(), getIt<NewRoomRepo>()),
+  );
+  getIt.registerLazySingleton<ExtendTheStayCubit>(
+    () => ExtendTheStayCubit(getIt<BookingRepo>()),
   );
   getIt.registerLazySingleton<BookingRoomCubit>(
     () => BookingRoomCubit(getIt<BookingRepo>()),

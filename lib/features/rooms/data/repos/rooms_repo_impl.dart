@@ -11,9 +11,20 @@ import '../../../../core/services/local_database.dart';
 class RoomsRepoImpl implements RoomsRepo {
   final DatabaseHelper databaseHelper = DatabaseHelper.instance;
   @override
-  Future<Either<ApiErrorModel, void>> deleteRoom({required int roomId}) {
-    // TODO: implement deleteRoom
-    throw UnimplementedError();
+  Future<Either<ApiErrorModel, void>> deleteRoom({
+    required RoomEntity roomEntity,
+  }) async {
+    try {
+      await databaseHelper.deleteData(
+        table: 'rooms',
+        idColumn: 'roomId',
+        id: roomEntity.roomId,
+      );
+      return right(null);
+    } catch (e) {
+      log(e.toString());
+      return left(DataBaseFailure(errMessage: e.toString()));
+    }
   }
 
   @override

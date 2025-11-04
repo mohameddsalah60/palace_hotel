@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../cubits/rooms_cubit.dart';
+import 'floor_section.dart';
 import 'rooms_gried_view.dart';
 import 'search_and_filter_type_bar.dart';
 
@@ -24,6 +25,8 @@ class RoomsViewBody extends StatelessWidget {
           SizedBox(height: 24.h),
           RoomsGriedView(),
           SizedBox(height: 24.h),
+          FloorSection(),
+          SizedBox(height: 16.h),
         ],
       ),
     );

@@ -1,9 +1,11 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:palace_systeam_managment/features/rooms/domin/entites/room_entity.dart';
 import 'package:palace_systeam_managment/features/rooms/domin/repos/rooms_repo.dart';
 import 'package:palace_systeam_managment/features/rooms/domin/repos/new_room_repo.dart';
+
+import 'rooms_filter_helper.dart';
+import 'rooms_form_controller.dart';
 
 part 'rooms_state.dart';
 
@@ -11,219 +13,143 @@ class RoomsCubit extends Cubit<RoomsState> {
   RoomsCubit(this.roomsRepo, this.newRoomRepo) : super(RoomsInitial()) {
     fetchRooms();
   }
+
   final RoomsRepo roomsRepo;
   final NewRoomRepo newRoomRepo;
 
-  List<RoomEntity> rooms = [];
-  Timer? _debounce;
+  final formController = RoomsFormController();
+
   List<RoomEntity> allRooms = [];
+  List<RoomEntity> rooms = [];
 
-  // ============= Controllers and Form Key (New Room) ============
-  final formKey = GlobalKey<FormState>();
-  final roomIdController = TextEditingController();
-  final typeRoomController = TextEditingController();
-  final floorRoomController = TextEditingController();
-  final descriptionRoomController = TextEditingController();
-  final priceController = TextEditingController();
+  Timer? _debounce;
 
-  // Dropdown Status for a new room
-  String selectedStatus = 'متاح';
-  final List<String> statuses = ['متاح', 'محجوز', 'تحت الصيانة'];
-
+  List<String> floors = [
+    'الكل',
+    'الاول',
+    'الثانى',
+    'الثالث',
+    'الرابع',
+    'الخامس',
+  ];
+  String selectedFloor = 'الكل';
   String searchSelectedStatus = 'جميع الحالات';
   String searchSelectedType = 'جميع الأنواع';
-
   final List<String> searchStatuses = [
     'جميع الحالات',
     'متاح',
     'محجوز',
     'تحت الصيانة',
   ];
-
   final List<String> searchTypes = ['جميع الأنواع', 'سينجل', 'دبل', 'جناح'];
 
-  void setSelectedStatus(String? newStatus) {
-    if (newStatus != null && !isClosed) {
-      selectedStatus = newStatus;
-    }
+  // ==================== Filtering ====================
+  void _applyFilters() {
+    if (isClosed) return;
+    emit(RoomsLoading());
+
+    rooms = RoomsFilterHelper.apply(
+      allRooms: allRooms,
+      selectedFloor: selectedFloor,
+      searchSelectedStatus: searchSelectedStatus,
+      searchSelectedType: searchSelectedType,
+      searchQuery: formController.roomIdController.text.trim(),
+    );
+
+    emit(RoomsSuccess(rooms: rooms));
+  }
+
+  // ==================== Search ====================
+  void search(String query) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), _applyFilters);
+  }
+
+  // ==================== Setters ====================
+  void setSelectedFloor(String floor) {
+    selectedFloor = floor;
+    _applyFilters();
   }
 
   void setSelectedSearchStatus(String? newStatus) {
-    if (newStatus != null && !isClosed) {
-      searchSelectedStatus = newStatus;
-      _filterAndSearchRooms();
-    }
+    if (newStatus == null) return;
+    searchSelectedStatus = newStatus;
+    _applyFilters();
   }
 
   void setSelectedSearchType(String? newType) {
-    if (newType != null && !isClosed) {
-      searchSelectedType = newType;
-      _filterAndSearchRooms();
-    }
+    if (newType == null) return;
+    searchSelectedType = newType;
+    _applyFilters();
   }
 
-  void _filterAndSearchRooms() {
-    if (isClosed) return;
+  // ==================== CRUD ====================
+  Future<void> fetchRooms() async {
     emit(RoomsLoading());
-
-    List<RoomEntity> filteredRooms = allRooms;
-
-    if (searchSelectedStatus != 'جميع الحالات') {
-      filteredRooms =
-          filteredRooms
-              .where((room) => room.statusRoom == searchSelectedStatus)
-              .toList();
-    }
-
-    if (searchSelectedType != 'جميع الأنواع') {
-      filteredRooms =
-          filteredRooms
-              .where((room) => room.typeRoom == searchSelectedType)
-              .toList();
-    }
-
-    final query = (roomIdController.text).trim().toLowerCase();
-    if (query.isNotEmpty) {
-      filteredRooms =
-          filteredRooms.where((room) {
-            return room.roomId!.toString().contains(query) ||
-                room.typeRoom.toLowerCase().contains(query) ||
-                room.statusRoom.toLowerCase().contains(query);
-          }).toList();
-    }
-
-    rooms = filteredRooms;
-    if (!isClosed) {
-      emit(RoomsSuccess(rooms: rooms));
-    }
-  }
-
-  void fetchRooms() async {
-    if (isClosed) return;
-    emit(RoomsLoading());
-
     final result = await roomsRepo.getAllRooms();
 
-    if (isClosed) return;
-
     result.fold(
-      (failure) {
-        emit(RoomsFailure(errMessage: failure.errMessage));
-      },
-      (fetchRooms) {
-        allRooms = fetchRooms;
+      (failure) => emit(RoomsFailure(errMessage: failure.errMessage)),
+      (data) {
+        allRooms = data;
         rooms = allRooms;
         emit(RoomsSuccess(rooms: rooms));
       },
     );
   }
 
-  void search(String query) {
-    if (isClosed) return;
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
-      if (isClosed) return;
-      _filterAndSearchRooms();
-    });
-  }
+  Future<void> addNewRoom() async {
+    final form = formController;
+    if (!form.formKey.currentState!.validate()) return;
 
-  void addNewRoom() async {
-    if (formKey.currentState!.validate()) {
-      if (isClosed) return;
+    final id = int.tryParse(form.roomIdController.text);
+    if (id == null) {
+      emit(RoomsFailure(errMessage: 'يرجى إدخال رقم غرفة صحيح.'));
+      return;
+    }
 
-      final newRoomId = int.tryParse(roomIdController.text);
+    final entity = RoomEntity(
+      roomId: id,
+      typeRoom: form.selectedType,
+      floorRoom: form.selectedFloorRoom,
+      descriptionRoom: form.descriptionRoomController.text,
+      pricePerNight: int.tryParse(form.priceController.text)!,
+      statusRoom: form.selectedStatus,
+    );
 
-      if (newRoomId == null) {
-        emit(RoomsFailure(errMessage: 'يرجى إدخال رقم غرفة صحيح.'));
-        return;
-      }
+    emit(RoomsLoading());
 
-      emit(RoomsLoading());
+    final exists = allRooms.any((r) => r.roomId == id);
+    final result =
+        exists
+            ? await roomsRepo.updateRoom(roomEntity: entity)
+            : await newRoomRepo.insertNewRoom(roomEntity: entity);
 
-      final roomEntity = RoomEntity(
-        roomId: newRoomId,
-        typeRoom: typeRoomController.text,
-        floorRoom: floorRoomController.text,
-        descriptionRoom: descriptionRoomController.text,
-        pricePerNight: int.tryParse(priceController.text)!,
-        statusRoom: selectedStatus,
-      );
-      final isRoomExists = allRooms.any((room) => room.roomId == newRoomId);
-      if (isRoomExists) {
-        updateRoom(roomEntity: roomEntity);
+    result.fold(
+      (failure) => emit(RoomsFailure(errMessage: failure.errMessage)),
+      (_) {
+        form.clear();
         fetchRooms();
-        return;
-      }
+      },
+    );
+  }
 
-      final result = await newRoomRepo.insertNewRoom(roomEntity: roomEntity);
-
-      if (isClosed) return;
-
-      result.fold(
-        (failure) {
-          emit(RoomsFailure(errMessage: failure.errMessage));
-        },
-        (_) {
-          clearForm();
-          fetchRooms();
-        },
-      );
+  Future<void> deleteRoom(RoomEntity room) async {
+    if (room.statusRoom == 'محجوز') {
+      emit(RoomsFailure(errMessage: 'لا يمكن حذف غرفة محجوزة.'));
+      return;
     }
-  }
-
-  void updateRoom({required RoomEntity roomEntity}) async {
-    if (formKey.currentState!.validate()) {
-      if (isClosed) return;
-
-      final updatedRoomId = int.tryParse(roomIdController.text);
-
-      if (updatedRoomId == null) {
-        emit(RoomsFailure(errMessage: 'يرجى إدخال رقم غرفة صحيح.'));
-        return;
-      }
-
-      emit(RoomsLoading());
-
-      final result = await roomsRepo.updateRoom(roomEntity: roomEntity);
-
-      if (isClosed) return;
-
-      result.fold(
-        (failure) {
-          emit(RoomsFailure(errMessage: failure.errMessage));
-        },
-        (_) {
-          clearForm();
-          fetchRooms();
-        },
-      );
-    }
-  }
-
-  void initialStartDialog(RoomEntity? room) {
-    if (isClosed) return;
-    // This ensures that the controllers are always updated with the new room data.
-    roomIdController.text = room?.roomId.toString() ?? '';
-    typeRoomController.text = room?.typeRoom ?? '';
-    floorRoomController.text = room?.floorRoom ?? '';
-    descriptionRoomController.text = room?.descriptionRoom ?? '';
-    priceController.text = room?.pricePerNight.toString() ?? '';
-    selectedStatus = room?.statusRoom ?? 'متاح';
-  }
-
-  void clearForm() {
-    roomIdController.clear();
-    typeRoomController.clear();
-    floorRoomController.clear();
-    descriptionRoomController.clear();
-    priceController.clear();
-    selectedStatus = 'متاح';
+    final result = await roomsRepo.deleteRoom(roomEntity: room);
+    result.fold(
+      (failure) => emit(RoomsFailure(errMessage: failure.errMessage)),
+      (_) => fetchRooms(),
+    );
   }
 
   @override
   Future<void> close() {
     _debounce?.cancel();
-    clearForm();
+    formController.dispose();
     return super.close();
   }
 }

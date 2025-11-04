@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:flutter/foundation.dart';
@@ -26,7 +27,14 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = p.join(dbPath, fileName);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: _createDB,
+      onConfigure: (Database db) async {
+        await db.execute('PRAGMA foreign_keys = ON');
+      },
+    );
   }
 
   Future _createDB(Database db, int version) async {
@@ -56,6 +64,7 @@ class DatabaseHelper {
       paidAmount REAL NOT NULL DEFAULT 0,
       paidType TEXT NOT NULL,
       notes TEXT,
+      stutasBooking TEXT,
       FOREIGN KEY (roomID) REFERENCES rooms (roomId) ON DELETE CASCADE
     )
   ''');
@@ -92,8 +101,8 @@ class DatabaseHelper {
   Future<int> updateData({
     required String table,
     required Map<String, dynamic> row,
-    required String idColumn,
-    required dynamic id,
+    String? idColumn,
+    dynamic id,
   }) async {
     final db = await instance.database;
     return await db.update(table, row, where: '$idColumn = ?', whereArgs: [id]);
@@ -102,11 +111,16 @@ class DatabaseHelper {
   // 🟢 Delete
   Future<int> deleteData({
     required String table,
-    required String idColumn,
-    required dynamic id,
+    String? idColumn,
+    dynamic id,
   }) async {
     final db = await instance.database;
-    return await db.delete(table, where: '$idColumn = ?', whereArgs: [id]);
+    if (idColumn != null) {
+      log("🟢 Deleted from '$table' where $idColumn = $id");
+      return await db.delete(table, where: '$idColumn = ?', whereArgs: [id]);
+    }
+    log("🟢 Deleted database '$table'");
+    return await db.delete(table);
   }
 
   // 🟢 Close DB

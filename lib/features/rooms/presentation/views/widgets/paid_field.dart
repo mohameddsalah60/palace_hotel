@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/widgets/custom_text_from_field.dart';
-import '../../cubits/booking_room_cubit.dart';
+import '../../../../booking_management/presentation/cubits/booking_room_cubit.dart';
 
 class PaidField extends StatelessWidget {
   const PaidField({super.key});

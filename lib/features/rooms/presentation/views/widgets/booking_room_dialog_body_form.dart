@@ -6,7 +6,7 @@ import 'package:palace_systeam_managment/features/customers/presentation/cubits/
 import 'package:palace_systeam_managment/features/rooms/domin/entites/room_entity.dart';
 
 import '../../../../../core/widgets/custom_text_from_field.dart';
-import '../../cubits/booking_room_cubit.dart';
+import '../../../../booking_management/presentation/cubits/booking_room_cubit.dart';
 import 'booking_button.dart';
 import 'guset_name_field.dart';
 import 'paid_field.dart';

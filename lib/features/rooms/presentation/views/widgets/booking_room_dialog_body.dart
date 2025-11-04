@@ -5,7 +5,7 @@ import 'package:palace_systeam_managment/features/rooms/domin/entites/room_entit
 
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_text_styles.dart';
-import '../../cubits/booking_room_cubit.dart';
+import '../../../../booking_management/presentation/cubits/booking_room_cubit.dart';
 import 'booking_room_dialog_body_form.dart';
 
 class BookingRoomDialogBody extends StatelessWidget {

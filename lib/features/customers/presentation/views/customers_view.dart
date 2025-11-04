@@ -17,11 +17,25 @@ class CustomersView extends StatelessWidget {
       value: getIt<CustmersCubit>(),
       child: Scaffold(
         backgroundColor: AppColors.wheitDark,
-        floatingActionButton: CustomFloatingActionButton(
-          child: CustmerDetailsDialog(),
-        ),
+        floatingActionButton: CustomersViewfloatingAction(),
         body: CustomersViewBody(),
       ),
+    );
+  }
+}
+
+class CustomersViewfloatingAction extends StatelessWidget {
+  const CustomersViewfloatingAction({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomFloatingActionButton(
+      child: CustmerDetailsDialog(),
+      value: () {
+        if (context.mounted) {
+          context.read<CustmersCubit>().clearControllers();
+        }
+      },
     );
   }
 }

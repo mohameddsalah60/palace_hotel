@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:palace_systeam_managment/core/widgets/custom_text_from_field.dart';
-import 'package:palace_systeam_managment/features/rooms/presentation/cubits/booking_room_cubit.dart';
+import 'package:palace_systeam_managment/features/booking_management/presentation/cubits/booking_room_cubit.dart';
 
 class PricePerNightField extends StatelessWidget {
   const PricePerNightField({super.key});

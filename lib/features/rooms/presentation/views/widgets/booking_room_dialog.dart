@@ -3,9 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:palace_systeam_managment/features/rooms/presentation/views/widgets/booking_room_dialog_body.dart';
 
 import '../../../../../core/di/getit_service_loacator.dart';
-import '../../../../booking_management/domin/repos/booking_repo.dart';
 import '../../../domin/entites/room_entity.dart';
-import '../../cubits/booking_room_cubit.dart';
+import '../../../../booking_management/presentation/cubits/booking_room_cubit.dart';
 import '../../cubits/rooms_cubit.dart';
 
 class BookingRoomDialog extends StatelessWidget {

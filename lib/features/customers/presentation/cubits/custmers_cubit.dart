@@ -74,23 +74,35 @@ class CustmersCubit extends Cubit<CustmersState> {
         addressCustmer: addressCustmerController.text,
         jobCustmer: jobCustmerController.text,
       );
-      if (custmers.any((custmer) {
-        return custmer.nationalId == custmerIdController.text ||
-            custmer.phoneCustmer == phoneCustmerController.text;
-      })) {
-        final result = await custmerRepo.updateCustmer(
-          customerEntity: custmerEntity,
-        );
-        result.fold(
-          (failure) {
-            emit(CustmersError(failure.errMessage));
-          },
-          (_) {
-            emit(CustmerAdded());
-          },
-        );
+
+      final existingCustomer = custmers.any(
+        (custmer) =>
+            custmer.nationalId == custmerIdController.text ||
+            custmer.phoneCustmer == phoneCustmerController.text,
+      );
+
+      if (existingCustomer) {
+        emit(CustmersError('بيانات العميل موجودة من قبل'));
+        emit(CustmersLoaded(custmers));
+
         return;
+        // // Allow update if the national ID matches
+        // final result = await custmerRepo.updateCustmer(
+        //   customerEntity: custmerEntity,
+        // );
+        // result.fold(
+        //   (failure) {
+        //     emit(CustmersError(failure.errMessage));
+        //   },
+        //   (_) {
+        //     emit(CustmerAdded());
+        //   },
+        // );
+
+        // return;
       }
+
+      // Add new customer if no conflicts
       final result = await custmerRepo.addNewCustmer(
         customerEntity: custmerEntity,
       );
@@ -99,6 +111,7 @@ class CustmersCubit extends Cubit<CustmersState> {
           emit(CustmersError(failure.errMessage));
         },
         (_) {
+          clearControllers();
           emit(CustmerAdded());
         },
       );

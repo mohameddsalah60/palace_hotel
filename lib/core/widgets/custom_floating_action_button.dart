@@ -4,8 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../utils/app_colors.dart';
 
 class CustomFloatingActionButton extends StatelessWidget {
-  const CustomFloatingActionButton({super.key, required this.child});
+  const CustomFloatingActionButton({
+    super.key,
+    required this.child,
+    this.value,
+  });
   final Widget child;
+  final void Function()? value;
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -23,6 +28,8 @@ class CustomFloatingActionButton extends StatelessWidget {
       builder: (context) {
         return child;
       },
-    );
+    ).then((_) {
+      value?.call();
+    });
   }
 }

@@ -21,11 +21,15 @@ class CustomButton extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(vertical: 20.h),
-          backgroundColor: backgroundColor ?? AppColors.mainBlue,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.r),
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.all(
+            backgroundColor ?? AppColors.mainBlue,
+          ),
+          padding: WidgetStateProperty.all(
+            EdgeInsets.symmetric(vertical: 20.h),
+          ),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
           ),
         ),
         child: Text(

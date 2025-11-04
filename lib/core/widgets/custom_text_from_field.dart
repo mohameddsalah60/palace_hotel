@@ -15,6 +15,7 @@ class CustomTextFromField extends StatelessWidget {
     this.isReadOnly = false,
     this.maxLines,
     this.buildCounter,
+    this.iconColor,
   });
   final String labelText;
   final IconData icon;
@@ -25,6 +26,7 @@ class CustomTextFromField extends StatelessWidget {
   final bool isReadOnly;
   final int? maxLines;
   final FocusNode? focusNode;
+  final Color? iconColor;
   final Widget? Function(
     BuildContext, {
     required int currentLength,
@@ -60,7 +62,7 @@ class CustomTextFromField extends StatelessWidget {
   }) {
     return InputDecoration(
       labelText: labelText,
-      prefixIcon: Icon(icon, color: AppColors.greyDark),
+      prefixIcon: Icon(icon, color: iconColor ?? AppColors.greyDark),
       fillColor: AppColors.greyBorder,
       filled: true,
       border: OutlineInputBorder(

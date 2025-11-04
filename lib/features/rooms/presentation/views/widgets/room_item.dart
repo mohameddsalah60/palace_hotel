@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:palace_systeam_managment/core/widgets/custom_snackbar.dart';
 import 'package:palace_systeam_managment/features/rooms/domin/entites/room_entity.dart';
 import 'package:palace_systeam_managment/features/rooms/presentation/views/widgets/booking_room_dialog.dart';
+import 'package:palace_systeam_managment/features/rooms/presentation/views/widgets/extend_the_stay_dilog.dart';
 
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_text_styles.dart';
+import '../../cubits/rooms_cubit.dart';
 import 'new_room_form_dialog.dart';
 import 'room_item_info_row.dart';
 
@@ -15,12 +19,26 @@ class RoomItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return BookingRoomDialog(roomEntity: roomEntity);
-          },
-        );
+        if (roomEntity.statusRoom == 'محجوز') {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return ExtendTheStayDialog(roomEntity: roomEntity);
+            },
+          );
+        } else if (roomEntity.statusRoom == 'تحت الصيانة') {
+          customSnackBar(
+            context: context,
+            message: 'لا يمكن حجز الغرفة لانها تحت الصيانة حاليآ',
+          );
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return BookingRoomDialog(roomEntity: roomEntity);
+            },
+          );
+        }
       },
       onDoubleTap: () {
         showDialog(
@@ -28,7 +46,11 @@ class RoomItem extends StatelessWidget {
           builder: (context) {
             return NewRoomFormDialog(roomEntity: roomEntity);
           },
-        );
+        ).then((_) {
+          if (context.mounted) {
+            context.read<RoomsCubit>().formController.clear();
+          }
+        });
       },
       child: Container(
         padding: EdgeInsets.all(12.r),
@@ -74,7 +96,7 @@ class RoomItem extends StatelessWidget {
 
             SizedBox(height: 8.h),
             RoomItemInfoRow(
-              title: "طابق ${roomEntity.floorRoom}",
+              title: "الدور ${roomEntity.floorRoom}",
               icon: Icons.location_on_outlined,
             ),
             SizedBox(height: 8.h),

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:palace_systeam_managment/core/di/getit_service_loacator.dart';
 import 'package:palace_systeam_managment/core/utils/app_colors.dart';
-import 'package:palace_systeam_managment/features/rooms/presentation/cubits/booking_room_cubit.dart';
+import 'package:palace_systeam_managment/features/booking_management/presentation/cubits/booking_room_cubit.dart';
 
 import 'widgets/booking_data_table.dart';
 import 'widgets/booking_header.dart';

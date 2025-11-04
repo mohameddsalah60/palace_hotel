@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BookingEntity {
-  final String? guestName, guestName2;
+  final String? guestName, guestName2, stutasBooking;
   final int roomID;
   final DateTime checkInDate;
   final DateTime checkOutDate;
@@ -16,6 +16,7 @@ class BookingEntity {
   BookingEntity({
     this.guestName2,
     this.bookingID,
+    this.stutasBooking,
     required this.roomID,
     required this.paidAmount,
     required this.paidType,

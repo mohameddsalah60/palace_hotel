@@ -1,127 +1,140 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:palace_systeam_managment/core/entites/booking_entity.dart';
-
 import '../../../../../core/utils/app_colors.dart';
+import 'booking_confirmation_dialog.dart';
 
 class BookingDataTable extends StatelessWidget {
   const BookingDataTable({super.key, required this.bookingEntity});
+
   final List<BookingEntity> bookingEntity;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(16.r)),
-        color: AppColors.wheit,
-      ),
-      padding: EdgeInsets.all(16.r),
-      child: DataTable(
-        dataRowMaxHeight: 75.h,
-        columnSpacing: 24.w,
-        headingRowColor: WidgetStateColor.resolveWith(
-          (states) => AppColors.wheitDark.withValues(alpha: 0.1),
-        ),
-        border: TableBorder.all(
-          color: Colors.grey.shade300,
-          borderRadius: BorderRadius.circular(8.r),
-        ),
-        columns: const [
-          DataColumn(
-            label: Text(
-              'رقم الغرفة',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+    return Column(
+      children: [
+        SizedBox(height: 16.h),
+
+        Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(16.r)),
+            color: AppColors.wheit,
           ),
-          DataColumn(
-            label: Text(
-              'اسم النزيل',
-              style: TextStyle(fontWeight: FontWeight.bold),
+          padding: EdgeInsets.all(16.r),
+          child: DataTable(
+            showCheckboxColumn: false,
+            dataRowMaxHeight: 75.h,
+            columnSpacing: 24.w,
+            headingRowColor: WidgetStateColor.resolveWith(
+              (states) => Colors.grey.shade100,
             ),
-          ),
-          DataColumn(
-            label: Text(
-              'تاريخ الوصول',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            border: TableBorder.all(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(8.r),
             ),
-          ),
-          DataColumn(
-            label: Text(
-              'تاريخ المغادرة',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          DataColumn(
-            label: Text(
-              'عدد الليالي',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          DataColumn(
-            label: Text(
-              'الإجمالي',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          DataColumn(
-            label: Text(
-              'المدفوع',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          DataColumn(
-            label: Text(
-              'الحالة',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          DataColumn(
-            label: Text(
-              'طريقة الدفع',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          DataColumn(
-            label: Text(
-              'اسم الموظف',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-        rows: List<DataRow>.generate(bookingEntity.length, (index) {
-          return DataRow(
-            cells: [
-              DataCell(Text(bookingEntity[index].roomID.toString())),
-              DataCell(Text(bookingEntity[index].guestName!)),
-              DataCell(
-                Text(
-                  bookingEntity[index].checkInDate.toString().split(' ').first,
+            columns: const [
+              DataColumn(
+                label: Text(
+                  'رقم الغرفة',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
-              DataCell(
-                Text(
-                  bookingEntity[index].checkOutDate.toString().split(' ').first,
+              DataColumn(
+                label: Text(
+                  'اسم النزيل',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
-              DataCell(Text(bookingEntity[index].nightsCount.toString())),
-              DataCell(
-                Text(bookingEntity[index].totalPrice.toStringAsFixed(2)),
-              ),
-              DataCell(Text(bookingEntity[index].paidAmount.toString())),
-              DataCell(
-                Text(
-                  'نشط',
-                  style: TextStyle(
-                    color: bookingEntity[index].getStatusColor('نشط'),
-                  ),
+              DataColumn(
+                label: Text(
+                  'تاريخ الوصول',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ), // Placeholder for status
-              DataCell(Text(bookingEntity[index].paidType)),
-              DataCell(Text(bookingEntity[index].employeeName)),
+              ),
+              DataColumn(
+                label: Text(
+                  'تاريخ المغادرة',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'عدد الليالي',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'الإجمالي',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'المدفوع',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'الحالة',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'طريقة الدفع',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'اسم الموظف',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
             ],
-          );
-        }),
-      ),
+            rows: List<DataRow>.generate(bookingEntity.length, (index) {
+              final booking = bookingEntity[index];
+              return DataRow(
+                onSelectChanged: (_) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return BookingConfirmationDialog(booking: booking);
+                    },
+                  );
+                },
+                cells: [
+                  DataCell(Text(booking.roomID.toString())),
+                  DataCell(Text(booking.guestName!)),
+                  DataCell(
+                    Text(booking.checkInDate.toString().split(' ').first),
+                  ),
+                  DataCell(
+                    Text(booking.checkOutDate.toString().split(' ').first),
+                  ),
+                  DataCell(Text(booking.nightsCount.toString())),
+                  DataCell(Text(booking.totalPrice.toStringAsFixed(2))),
+                  DataCell(Text(booking.paidAmount.toString())),
+                  DataCell(
+                    Text(
+                      booking.stutasBooking!,
+                      style: TextStyle(
+                        color: booking.getStatusColor(booking.stutasBooking!),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  DataCell(Text(booking.paidType)),
+                  DataCell(Text(booking.employeeName)),
+                ],
+              );
+            }),
+          ),
+        ),
+      ],
     );
   }
 }
