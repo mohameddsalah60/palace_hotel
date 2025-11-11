@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "162535504391",
+    "project_id": "palace-hotel-37af8",
+    "storage_bucket": "palace-hotel-37af8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162535504391:android:e112cfabe275a72b4648a2",
+        "android_client_info": {
+          "package_name": "com.example.palace_systeam_managment"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCodP6D7CQE8kX2tKwte1Iy2xvVnbjTnw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
