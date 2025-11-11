@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:palace_systeam_managment/core/entites/booking_entity.dart';
+import '../../../../../core/di/getit_service_loacator.dart';
 import '../../../../../core/utils/app_colors.dart';
+import '../../../../rooms/presentation/cubits/rooms_cubit.dart';
+import '../../cubits/booking_room_cubit.dart';
 import 'booking_confirmation_dialog.dart';
 
 class BookingDataTable extends StatelessWidget {
@@ -102,7 +106,14 @@ class BookingDataTable extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return BookingConfirmationDialog(booking: booking);
+                      final roomsCubit = getIt<RoomsCubit>();
+                      return MultiBlocProvider(
+                        providers: [
+                          BlocProvider.value(value: getIt<BookingRoomCubit>()),
+                          BlocProvider.value(value: roomsCubit),
+                        ],
+                        child: BookingConfirmationDialog(booking: booking),
+                      );
                     },
                   );
                 },

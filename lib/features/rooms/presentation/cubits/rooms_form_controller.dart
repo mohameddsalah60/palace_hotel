@@ -11,7 +11,7 @@ class RoomsFormController {
   String selectedType = 'سينجل';
   String selectedFloorRoom = 'الاول';
 
-  final List<String> statuses = ['متاح', 'تحت الصيانة', 'محجوز', 'هاوس'];
+  final List<String> statuses = ['متاح', 'تحت الصيانة', 'هاوس'];
   final List<String> roomTypes = ['سينجل', 'دبل', 'جناح', 'سويت'];
   final List<String> roomFloors = [
     'الاول',
@@ -35,16 +35,6 @@ class RoomsFormController {
     roomIdController.clear();
     selectedFloorRoom = 'الاول';
     descriptionRoomController.clear();
-    priceController.clear();
-    selectedType = 'سينجل';
-    selectedStatus = 'متاح';
-  }
-
-  void dispose() {
-    roomIdController.dispose();
-    descriptionRoomController.dispose();
-    priceController.dispose();
-    selectedFloorRoom = 'الاول';
     priceController.clear();
     selectedType = 'سينجل';
     selectedStatus = 'متاح';

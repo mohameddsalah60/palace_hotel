@@ -9,6 +9,7 @@ import '../../../../../core/widgets/custom_button.dart';
 import '../../../../../core/widgets/custom_date_field.dart';
 import '../../../../../core/widgets/custom_text_from_field.dart';
 import '../../../domin/entites/room_entity.dart';
+import 'booking_room_dialog.dart';
 
 class ExtendTheStayDilaogBodyForm extends StatelessWidget {
   const ExtendTheStayDilaogBodyForm({super.key, required this.roomEntity});
@@ -176,18 +177,41 @@ class ExtendTheStayDilaogBodyForm extends StatelessWidget {
 
                 SizedBox(height: 16.h),
 
-                CustomButton(
-                  text: 'تأكيد التمديد',
-                  backgroundColor: AppColors.mainBlue,
-                  onPressed: () {
-                    if (context
-                        .read<ExtendTheStayCubit>()
-                        .formKey
-                        .currentState!
-                        .validate()) {
-                      extendCubit.confirmExtendStay(booking: booking);
-                    }
-                  },
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        text: 'اضافة حجز جديد',
+                        backgroundColor: AppColors.success,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return BookingRoomDialog(roomEntity: roomEntity);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+
+                    SizedBox(width: 16.w),
+                    Expanded(
+                      child: CustomButton(
+                        text: 'تأكيد التمديد',
+                        backgroundColor: AppColors.mainBlue,
+                        onPressed: () {
+                          if (context
+                              .read<ExtendTheStayCubit>()
+                              .formKey
+                              .currentState!
+                              .validate()) {
+                            extendCubit.confirmExtendStay(booking: booking);
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

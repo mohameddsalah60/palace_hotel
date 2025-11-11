@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:palace_systeam_managment/core/widgets/custom_snackbar.dart';
 import 'package:palace_systeam_managment/features/rooms/domin/entites/room_entity.dart';
-import 'package:palace_systeam_managment/features/rooms/presentation/views/widgets/booking_room_dialog.dart';
 import 'package:palace_systeam_managment/features/rooms/presentation/views/widgets/extend_the_stay_dilog.dart';
 
+import '../../../../../core/di/getit_service_loacator.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_text_styles.dart';
+import '../../../../booking_management/presentation/cubits/booking_room_cubit.dart';
 import '../../cubits/rooms_cubit.dart';
+import 'booking_room_dialog_body.dart';
 import 'new_room_form_dialog.dart';
 import 'room_item_info_row.dart';
 
@@ -32,10 +34,24 @@ class RoomItem extends StatelessWidget {
             message: 'لا يمكن حجز الغرفة لانها تحت الصيانة حاليآ',
           );
         } else {
+          final roomsCubit = context.read<RoomsCubit>();
+          final bookingRoomCubit = getIt<BookingRoomCubit>();
+
           showDialog(
             context: context,
-            builder: (context) {
-              return BookingRoomDialog(roomEntity: roomEntity);
+            builder: (_) {
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(value: roomsCubit),
+                  BlocProvider.value(
+                    value:
+                        bookingRoomCubit..updatePricePerNight(
+                          roomEntity.pricePerNight.toString(),
+                        ),
+                  ),
+                ],
+                child: BookingRoomDialogBody(roomEntity: roomEntity),
+              );
             },
           );
         }

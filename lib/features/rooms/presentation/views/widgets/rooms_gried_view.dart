@@ -18,30 +18,39 @@ class RoomsGriedView extends StatelessWidget {
           color: AppColors.wheit,
           borderRadius: BorderRadius.circular(12.r),
         ),
-        child: BlocBuilder<RoomsCubit, RoomsState>(
-          builder: (context, state) {
-            if (state is RoomsSuccess) {
-              return GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 12.h,
-                  crossAxisSpacing: 14.w,
-                  childAspectRatio: MediaQuery.of(context).size.width / 900,
-                ),
-                itemCount: state.rooms.length,
-                itemBuilder: (context, index) {
-                  return RoomItem(roomEntity: state.rooms[index]);
-                },
-              );
-            } else if (state is RoomsLoading) {
-              return Center(
-                child: CircularProgressIndicator(color: AppColors.blackLight),
-              );
-            }
-            return SizedBox.shrink();
-          },
-        ),
+        child: GridViewListBuilder(),
       ),
+    );
+  }
+}
+
+class GridViewListBuilder extends StatelessWidget {
+  const GridViewListBuilder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RoomsCubit, RoomsState>(
+      builder: (context, state) {
+        if (state is RoomsSuccess) {
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              mainAxisSpacing: 12.h,
+              crossAxisSpacing: 14.w,
+              childAspectRatio: MediaQuery.of(context).size.width / 900,
+            ),
+            itemCount: state.rooms.length,
+            itemBuilder: (context, index) {
+              return RoomItem(roomEntity: state.rooms[index]);
+            },
+          );
+        } else if (state is RoomsLoading) {
+          return Center(
+            child: CircularProgressIndicator(color: AppColors.blackLight),
+          );
+        }
+        return SizedBox.shrink();
+      },
     );
   }
 }

@@ -6,17 +6,19 @@ import 'package:palace_systeam_managment/core/services/local_database.dart';
 import 'package:palace_systeam_managment/features/home/presentation/cubits/page_changed_cubit.dart';
 import 'package:intl/intl_standalone.dart'
     if (dart.library.html) 'package:intl/intl_browser.dart';
+import 'package:palace_systeam_managment/features/rooms/presentation/cubits/rooms_cubit.dart';
 
 import 'core/di/getit_service_loacator.dart';
 import 'core/routing/app_router.dart';
 import 'core/routing/app_routes.dart';
 import 'core/services/observer_bloc.dart';
 import 'core/utils/app_colors.dart';
+import 'features/rooms/domin/repos/new_room_repo.dart';
+import 'features/rooms/domin/repos/rooms_repo.dart';
 import 'generated/l10n.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DatabaseHelper.instance.database;
   Bloc.observer = MyBlocObserver();
   await setup();
   await findSystemLocale();
@@ -33,8 +35,16 @@ class PalaceSysteamManagment extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, child) {
-        return BlocProvider(
-          create: (context) => PageChangedCubit(),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => PageChangedCubit()),
+            BlocProvider(
+              create:
+                  (context) =>
+                      RoomsCubit(getIt<RoomsRepo>(), getIt<NewRoomRepo>())
+                        ..fetchRooms(),
+            ),
+          ],
           child: MaterialApp(
             localizationsDelegates: [
               S.delegate,

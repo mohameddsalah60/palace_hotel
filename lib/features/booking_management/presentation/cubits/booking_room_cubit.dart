@@ -158,64 +158,83 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
     return false;
   }
 
-  bookingRoom({required final RoomEntity room}) async {
+  Future<void> bookingRoom({required final RoomEntity room}) async {
     BookingEntity bookingEntity = BookingEntity(
-      guestName: guestNameController.text,
-      guestName2: guestName2Controller.text,
+      guestName: guestNameController.text.trim(),
+      guestName2: guestName2Controller.text.trim(),
       roomID: room.roomId!,
       checkInDate: selectedCheckInDate!,
       checkOutDate: selectedCheckOutDate!,
       nightsCount: nightsCountController.text,
       pricePerNight: double.tryParse(pricePerNightController.text) ?? 0,
       totalPrice: double.tryParse(totalPriceController.text) ?? 0,
-      employeeName: employeeNameController.text,
+      employeeName: employeeNameController.text.trim(),
       notes: notesController.text.isNotEmpty ? notesController.text : null,
       paidType: paymentMethod!,
       paidAmount: double.tryParse(paidAmountController.text) ?? 0,
       stutasBooking: 'نشط',
     );
+
+    // ✅ تحقق إن الغرفة مش محجوزة في نفس الوقت
+    final hasConflict = allBookings.any((b) {
+      if (b.roomID != room.roomId) return false;
+      if (b.stutasBooking == 'ملغي' || b.stutasBooking == 'مكتمل') return false;
+
+      // تحقق من التواريخ (overlap)
+      final existingStart = b.checkInDate;
+      final existingEnd = b.checkOutDate;
+      final newStart = selectedCheckInDate!;
+      final newEnd = selectedCheckOutDate!;
+
+      final isOverlapping =
+          newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart);
+
+      return isOverlapping;
+    });
+
+    if (hasConflict) {
+      emit(
+        BookingRoomError(
+          message: '❌ الغرفة رقم ${room.roomId} محجوزة بالفعل في نفس الفترة.',
+        ),
+      );
+      getBookings();
+      return;
+    }
+
+    // ✅ تحقق لو العميل عنده حجز نشط آخر
     final customerBookings = allBookings.where(
       (b) => b.guestName == guestNameController.text,
     );
 
-    // ✅ نتحقق لو عنده حجز نشط (يعني مش مكتمل ولا ملغي)
     final hasActiveBooking = customerBookings.any(
       (b) => b.stutasBooking != 'مكتمل' && b.stutasBooking != 'ملغي',
     );
+
     if (hasActiveBooking) {
-      final conflict = hasConflictBooking(
-        roomId: room.roomId.toString(),
-        newCheckIn: selectedCheckInDate!,
-        newCheckOut: selectedCheckOutDate!,
+      emit(
+        BookingRoomError(
+          message: '❌ العميل ${guestNameController.text} لديه حجز آخر نشط.',
+        ),
       );
-
-      if (conflict) {
-        emit(
-          BookingRoomError(
-            message:
-                '❌ العميل ${guestNameController.text} لديه حجز آخر في نفس الفترة',
-          ),
-        );
-        clearControls();
-        getBookings();
-
-        return;
-      }
+      getBookings();
+      return;
     }
 
-    log(bookingEntity.toString());
+    emit(BookingRoomLoading());
     final failureOrSuccess = await bookingRepo.addBooking(
       booking: bookingEntity,
     );
+
+    if (isClosed) return;
+
     failureOrSuccess.fold(
       (failure) {
         clearControls();
-
         emit(BookingRoomError(message: failure.errMessage));
       },
-      (success) {
+      (_) {
         clearControls();
-
         emit(BookingRoomSuccess());
       },
     );
@@ -249,9 +268,12 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
   }
 
   BookingEntity getBookingByIdRoom({required String idRoom}) {
-    var booking = allBookings.lastWhere((booking) {
-      return booking.roomID.toString().contains(idRoom);
+    var b = allBookings.where((booking) {
+      return booking.stutasBooking.toString().contains('نشط');
     });
+    BookingEntity booking = b.firstWhere(
+      (booking) => booking.roomID.toString() == idRoom,
+    );
     return booking;
   }
 
@@ -279,7 +301,8 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
     required BookingEntity booking,
     required String status,
   }) async {
-    booking = BookingEntity(
+    // تحديث حالة الحجز الحالية
+    final updatedBooking = BookingEntity(
       bookingID: booking.bookingID,
       roomID: booking.roomID,
       paidAmount: booking.totalPrice,
@@ -295,11 +318,31 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
       guestName2: booking.guestName2,
       notes: booking.notes,
     );
-    await bookingRepo.updateBookingStatus(booking: booking);
-    await bookingRepo.updateRoomStatus(
-      roomId: booking.roomID,
-      newStatus: 'متاح',
+
+    await bookingRepo.updateBookingStatus(booking: updatedBooking);
+
+    // ✅ قبل ما نحدث حالة الغرفة، نتحقق هل في حجز تاني على نفس الأوضة بعد تاريخ الخروج
+    final roomId = booking.roomID;
+    final checkOutDate = booking.checkOutDate;
+
+    final hasFutureBooking = allBookings.any(
+      (b) =>
+          b.roomID == roomId &&
+          b.stutasBooking != 'ملغي' &&
+          b.stutasBooking != 'مكتمل' &&
+          b.checkInDate.isAfter(checkOutDate),
     );
+
+    if (hasFutureBooking) {
+      // لو فيه حجز جاي على نفس الغرفة
+      await bookingRepo.updateRoomStatus(roomId: roomId, newStatus: 'محجوز');
+      log('🟡 الغرفة $roomId فيها حجز قادم → تظل حالتها "محجوزة"');
+    } else {
+      // لو مفيش أي حجز قادم
+      await bookingRepo.updateRoomStatus(roomId: roomId, newStatus: 'متاح');
+      log('🟢 الغرفة $roomId أصبحت "متاحة" بعد اكتمال/إلغاء الحجز');
+    }
+
     emit(UpdateStateBooking());
     getBookings();
   }

@@ -10,9 +10,7 @@ import 'rooms_form_controller.dart';
 part 'rooms_state.dart';
 
 class RoomsCubit extends Cubit<RoomsState> {
-  RoomsCubit(this.roomsRepo, this.newRoomRepo) : super(RoomsInitial()) {
-    fetchRooms();
-  }
+  RoomsCubit(this.roomsRepo, this.newRoomRepo) : super(RoomsInitial());
 
   final RoomsRepo roomsRepo;
   final NewRoomRepo newRoomRepo;
@@ -86,10 +84,13 @@ class RoomsCubit extends Cubit<RoomsState> {
   // ==================== CRUD ====================
   Future<void> fetchRooms() async {
     emit(RoomsLoading());
+
     final result = await roomsRepo.getAllRooms();
 
     result.fold(
-      (failure) => emit(RoomsFailure(errMessage: failure.errMessage)),
+      (failure) {
+        emit(RoomsFailure(errMessage: failure.errMessage));
+      },
       (data) {
         allRooms = data;
         rooms = allRooms;
@@ -126,8 +127,12 @@ class RoomsCubit extends Cubit<RoomsState> {
             : await newRoomRepo.insertNewRoom(roomEntity: entity);
 
     result.fold(
-      (failure) => emit(RoomsFailure(errMessage: failure.errMessage)),
+      (failure) {
+        if (isClosed) return;
+        emit(RoomsFailure(errMessage: failure.errMessage));
+      },
       (_) {
+        if (isClosed) return;
         form.clear();
         fetchRooms();
       },
@@ -149,7 +154,6 @@ class RoomsCubit extends Cubit<RoomsState> {
   @override
   Future<void> close() {
     _debounce?.cancel();
-    formController.dispose();
     return super.close();
   }
 }

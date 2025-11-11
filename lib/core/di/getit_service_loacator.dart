@@ -12,15 +12,22 @@ import 'package:palace_systeam_managment/features/rooms/presentation/cubits/room
 import '../../features/customers/data/repos/custmer_repo_impl.dart';
 import '../../features/customers/presentation/cubits/custmers_cubit.dart';
 import '../../features/rooms/data/repos/rooms_repo_impl.dart';
+import '../services/database_service.dart';
+import '../services/sqflite_local_database.dart';
 
 final getIt = GetIt.instance;
 
 Future<void> setup() async {
-  getIt.registerSingleton<NewRoomRepo>(NewRoomRepoImpl());
-  getIt.registerSingleton<RoomsRepo>(RoomsRepoImpl());
+  getIt.registerSingleton<DatabaseService>(SqfliteLocalDatabase());
+  getIt.registerSingleton<NewRoomRepo>(
+    NewRoomRepoImpl(databaseService: getIt<DatabaseService>()),
+  );
+  getIt.registerSingleton<RoomsRepo>(
+    RoomsRepoImpl(databaseService: getIt<DatabaseService>()),
+  );
   getIt.registerSingleton<CustmerRepo>(CustmerRepoImpl());
   getIt.registerSingleton<BookingRepo>(BookingRepoImpl());
-  getIt.registerLazySingleton<RoomsCubit>(
+  getIt.registerFactory<RoomsCubit>(
     () => RoomsCubit(getIt<RoomsRepo>(), getIt<NewRoomRepo>()),
   );
   getIt.registerLazySingleton<ExtendTheStayCubit>(
