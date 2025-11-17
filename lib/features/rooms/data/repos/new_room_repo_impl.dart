@@ -17,11 +17,16 @@ class NewRoomRepoImpl implements NewRoomRepo {
   }) async {
     try {
       Map<String, dynamic> roomData = RoomModel.fromEntity(roomEntity).toMap();
-      await databaseService.addData(path: 'rooms', data: roomData);
-      log('Room inserted successfully: $roomData');
+      log('Trying to add room: $roomData');
+      await databaseService.addData(
+        path: 'rooms',
+        data: roomData,
+        docId: roomEntity.roomId.toString(),
+      );
+      log('✅ Room added successfully');
       return right(null);
-    } catch (e) {
-      log(e.toString());
+    } catch (e, st) {
+      log('❌ Failed to add room: $e\n$st');
       return left(DataBaseFailure(errMessage: e.toString()));
     }
   }

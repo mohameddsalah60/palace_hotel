@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:palace_systeam_managment/core/utils/app_text_styles.dart';
 
 import '../utils/app_colors.dart';
 
@@ -16,6 +17,8 @@ class CustomTextFromField extends StatelessWidget {
     this.maxLines,
     this.buildCounter,
     this.iconColor,
+    this.textColor,
+    this.isObscureText,
   });
   final String labelText;
   final IconData icon;
@@ -26,7 +29,7 @@ class CustomTextFromField extends StatelessWidget {
   final bool isReadOnly;
   final int? maxLines;
   final FocusNode? focusNode;
-  final Color? iconColor;
+  final Color? iconColor, textColor;
   final Widget? Function(
     BuildContext, {
     required int currentLength,
@@ -34,9 +37,11 @@ class CustomTextFromField extends StatelessWidget {
     required int? maxLength,
   })?
   buildCounter;
+  final bool? isObscureText;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      obscureText: isObscureText ?? false,
       focusNode: focusNode,
       buildCounter: buildCounter,
       maxLines: maxLines ?? 1,
@@ -44,7 +49,12 @@ class CustomTextFromField extends StatelessWidget {
       onChanged: onChanged,
       controller: controller,
       keyboardType: keyboardType,
-      decoration: _inputDecoration(labelText: labelText, icon: icon),
+      decoration: _inputDecoration(
+        context: context,
+        labelText: labelText,
+        icon: icon,
+        textColor: textColor,
+      ),
       validator:
           validator ??
           (value) {
@@ -57,13 +67,18 @@ class CustomTextFromField extends StatelessWidget {
   }
 
   InputDecoration _inputDecoration({
+    required BuildContext context,
     required String labelText,
     required IconData icon,
+    Color? textColor,
   }) {
     return InputDecoration(
       labelText: labelText,
+      labelStyle: AppTextStyles.fontWeight400Size14(
+        context,
+      ).copyWith(color: textColor ?? AppColors.black),
       prefixIcon: Icon(icon, color: iconColor ?? AppColors.greyDark),
-      fillColor: AppColors.greyBorder,
+      fillColor: AppColors.wheitDark,
       filled: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15),

@@ -80,4 +80,11 @@ abstract class AppTextStyles {
       fontWeight: FontWeight.w600,
     );
   }
+
+  static TextStyle fontWeight600Size20(BuildContext context) {
+    return TextStyle(
+      fontSize: getResponsiveFontSize(context, fontSize: 20),
+      fontWeight: FontWeight.w600,
+    );
+  }
 }

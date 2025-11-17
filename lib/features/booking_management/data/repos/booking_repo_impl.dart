@@ -6,24 +6,24 @@ import 'package:palace_systeam_managment/core/entites/booking_entity.dart';
 
 import 'package:palace_systeam_managment/core/errors/api_error_model.dart';
 import 'package:palace_systeam_managment/core/models/booking_model.dart';
+import 'package:palace_systeam_managment/core/services/database_service.dart';
 
-import '../../../../core/services/local_database.dart';
 import '../../domin/repos/booking_repo.dart';
 
 class BookingRepoImpl extends BookingRepo {
-  final DatabaseHelper databaseHelper = DatabaseHelper.instance;
+  final DatabaseService databaseService;
 
+  BookingRepoImpl({required this.databaseService});
   @override
   Future<void> updateBookingStatus({required BookingEntity booking}) async {
     try {
       Map<String, dynamic> bookingData =
           BookingModel.fromEntity(booking).toMap();
-      final db = await DatabaseHelper.instance.database;
-      await db.update(
-        'bookings',
-        bookingData,
-        where: 'bookingID = ?',
-        whereArgs: [booking.bookingID],
+      await databaseService.updateData(
+        path: 'bookings',
+        oldVALUE: bookingData,
+        newVALUE: 'bookingID',
+        supPath: booking.bookingID,
       );
     } catch (e) {
       log(e.toString());
@@ -35,12 +35,11 @@ class BookingRepoImpl extends BookingRepo {
     required int roomId,
     required String newStatus,
   }) async {
-    final db = await DatabaseHelper.instance.database;
-    await db.update(
-      'rooms',
-      {'statusRoom': newStatus},
-      where: 'roomId = ?',
-      whereArgs: [roomId],
+    await databaseService.updateData(
+      path: 'rooms',
+      oldVALUE: {'statusRoom': newStatus},
+      supPath: roomId.toString(),
+      newVALUE: 'roomId',
     );
   }
 
@@ -51,30 +50,28 @@ class BookingRepoImpl extends BookingRepo {
     try {
       Map<String, dynamic> bookingData =
           BookingModel.fromEntity(booking).toMap();
-      await databaseHelper.insertData(table: 'bookings', row: bookingData);
-      await databaseHelper.updateData(
-        table: 'rooms',
-        row: {'statusRoom': 'محجوز'},
-        id: booking.roomID,
-        idColumn: 'roomId',
+      await databaseService.addData(
+        path: 'bookings',
+        data: bookingData,
+        docId: booking.bookingID.toString(),
+      );
+      await databaseService.updateData(
+        path: 'rooms',
+        oldVALUE: {'statusRoom': 'محجوز'},
+        supPath: booking.roomID.toString(),
+        newVALUE: booking.roomID,
       );
 
-      log('booking inserted successfully: $bookingData');
       return right(null);
     } catch (e) {
-      log(e.toString());
       return left(DataBaseFailure(errMessage: e.toString()));
     }
   }
 
   @override
-  Future<Either<ApiErrorModel, void>> deleteBooking(int bookingID) async {
+  Future<Either<ApiErrorModel, void>> deleteBooking(String bookingID) async {
     try {
-      await databaseHelper.deleteData(
-        table: 'bookings',
-        id: bookingID,
-        idColumn: 'bookingID',
-      );
+      await databaseService.deleteData(path: 'bookings', value: bookingID);
       return right(null);
     } catch (e) {
       log(e.toString());
@@ -85,9 +82,13 @@ class BookingRepoImpl extends BookingRepo {
   @override
   Future<Either<ApiErrorModel, List<BookingEntity>>> getAllBookings() async {
     try {
-      final bookingsData = await databaseHelper.queryAllData(table: 'bookings');
-      final bookings =
-          bookingsData.map((data) => BookingModel.fromJson(data)).toList();
+      final bookingsData = await databaseService.getData(path: 'bookings');
+      final List<BookingEntity> bookings =
+          (bookingsData as List<dynamic>)
+              .map(
+                (item) => BookingModel.fromJson(item as Map<String, dynamic>),
+              )
+              .toList();
       return right(bookings);
     } catch (e) {
       log(e.toString());
@@ -102,11 +103,11 @@ class BookingRepoImpl extends BookingRepo {
     try {
       Map<String, dynamic> bookingData =
           BookingModel.fromEntity(booking).toMap();
-      await databaseHelper.updateData(
-        table: 'bookings',
-        row: bookingData,
-        id: booking.bookingID,
-        idColumn: 'bookingID',
+      await databaseService.updateData(
+        path: 'bookings',
+        oldVALUE: bookingData,
+        newVALUE: 'bookingID',
+        supPath: booking.bookingID,
       );
       return right(null);
     } catch (e) {

@@ -51,6 +51,7 @@ class BookingModel extends BookingEntity {
       'paidType': paidType,
       'paidAmount': paidAmount,
       'stutasBooking': stutasBooking,
+      'bookingID': bookingID,
     };
   }
 

@@ -1,9 +1,15 @@
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'database_service.dart';
 
 class FirestoreService implements DatabaseService {
   FirebaseFirestore firestoreService = FirebaseFirestore.instance;
+
+  @override
+  Future<void> initialize() async {
+    log("🔹 Firestore initialized for app: ${firestoreService.app.name}");
+    return Future.value();
+  }
 
   @override
   Future<void> addData({
@@ -12,16 +18,19 @@ class FirestoreService implements DatabaseService {
     String? subPath,
     required Map<String, dynamic> data,
   }) async {
-    if (docId != null) {
-      await firestoreService.collection(path).doc(docId).set(data);
-    } else if (subPath != null) {
-      await firestoreService
-          .collection(path)
-          .doc(docId)
-          .collection(subPath)
-          .add(data);
-    } else {
-      await firestoreService.collection(path).add(data);
+    try {
+      if (docId != null) {
+        await firestoreService.collection(path).doc(docId).set(data);
+        log("✅ Successfully added with docId: $docId");
+      } else {
+        DocumentReference ref = await firestoreService
+            .collection(path)
+            .add(data);
+        log("✅ Successfully added with auto-generated docId: ${ref.id}");
+      }
+    } catch (e, st) {
+      log("❌ Failed to add data: $e\n$st");
+      rethrow;
     }
   }
 
@@ -32,80 +41,45 @@ class FirestoreService implements DatabaseService {
     String? subPath,
     Map<String, dynamic>? query,
   }) async {
-    if (uId != null) {
-      var data = await firestoreService.collection(path).doc(uId).get();
-      return data.data();
-    }
-    if (subPath != null && uId != null) {
-      var data =
-          await firestoreService
-              .collection(path)
-              .doc(uId)
-              .collection(subPath)
-              .get();
-      return data.docs.map((e) => e.data());
-    } else {
-      Query<Map<String, dynamic>> data = firestoreService.collection(path);
+    try {
+      if (uId != null) {
+        var doc = await firestoreService.collection(path).doc(uId).get();
+        return doc.data();
+      }
+
+      Query<Map<String, dynamic>> q = firestoreService.collection(path);
       if (query != null) {
-        if (query['where'] != null) {
-          var whereField = query['where'];
-          var isEqualTo = query['isEqualTo'];
-          data = data.where(whereField, isEqualTo: isEqualTo);
+        if (query['where'] != null && query['isEqualTo'] != null) {
+          q = q.where(query['where'], isEqualTo: query['isEqualTo']);
         }
         if (query['orderBy'] != null) {
-          var orderByField = query['orderBy'];
-          var descending = query['descending'] ?? false;
-          data = data.orderBy(orderByField, descending: descending);
+          q = q.orderBy(
+            query['orderBy'],
+            descending: query['descending'] ?? false,
+          );
         }
       }
-      var result = await data.get();
-      return result.docs.map((e) => e.data()).toList();
+
+      var snapshot = await q.get();
+      return snapshot.docs.map((e) => e.data()).toList();
+    } catch (e, st) {
+      log("❌ getData failed for path $path: $e\n$st");
+      rethrow;
     }
   }
-
-  // @override
-  // Stream<dynamic> getStreamData({
-  //   required String path,
-  //   String? uId,
-  //   String? subPath,
-  //   Map<String, dynamic>? query,
-  // }) async* {
-  //   try {
-  //     // الحالة 3: لا يوجد uId ولا subPath
-  //     Query<Map<String, dynamic>> collectionRef = firestoreService.collection(
-  //       path,
-  //     );
-
-  //     if (query != null) {
-  //       if (query['where'] != null && query['isEqualTo'] != null) {
-  //         collectionRef = collectionRef.where(
-  //           query['where'],
-  //           isEqualTo: query['isEqualTo'],
-  //         );
-  //       }
-
-  //       if (query['orderBy'] != null) {
-  //         collectionRef = collectionRef.orderBy(
-  //           query['orderBy'],
-  //           descending: query['descending'] ?? false,
-  //         );
-  //       }
-  //     }
-  //     await for (var result in collectionRef.snapshots()) {
-  //       yield result.docs.map((e) => e.data()).toList();
-  //     }
-  //   } catch (e) {
-  //     yield* Stream.error(e);
-  //   }
-  // }
 
   @override
   Future<bool> checkIfDataExists({
     required String path,
     required String docId,
   }) async {
-    var data = await firestoreService.collection(path).doc(docId).get();
-    return data.exists;
+    try {
+      var doc = await firestoreService.collection(path).doc(docId).get();
+      return doc.exists;
+    } catch (e) {
+      log("❌ checkIfDataExists failed for $path/$docId: $e");
+      return false;
+    }
   }
 
   @override
@@ -115,7 +89,13 @@ class FirestoreService implements DatabaseService {
     required Map<String, dynamic> oldVALUE,
     dynamic newVALUE,
   }) async {
-    await firestoreService.collection(path).doc(supPath).update(oldVALUE);
+    try {
+      await firestoreService.collection(path).doc(supPath).update(oldVALUE);
+      log("✅ Updated doc: $supPath in $path with $oldVALUE");
+    } catch (e, st) {
+      log("❌ updateData failed: $e\n$st");
+      rethrow;
+    }
   }
 
   @override
@@ -124,11 +104,12 @@ class FirestoreService implements DatabaseService {
     String? supPath,
     dynamic value,
   }) async {
-    await firestoreService.collection(path).doc(supPath).delete();
-  }
-
-  @override
-  Future<void> initialize() {
-    return Future.value();
+    try {
+      await firestoreService.collection(path).doc(value.toString()).delete();
+      log("✅ Deleted doc: $value from $path");
+    } catch (e, st) {
+      log("❌ deleteData failed: $e\n$st");
+      rethrow;
+    }
   }
 }

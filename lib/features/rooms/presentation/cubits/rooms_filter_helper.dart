@@ -41,7 +41,7 @@ class RoomsFilterHelper {
           filtered
               .where(
                 (room) =>
-                    room.roomId.toString().contains(q) ||
+                    room.roomId.toString().toLowerCase().contains(q) ||
                     room.typeRoom.toLowerCase().contains(q) ||
                     room.statusRoom.toLowerCase().contains(q),
               )

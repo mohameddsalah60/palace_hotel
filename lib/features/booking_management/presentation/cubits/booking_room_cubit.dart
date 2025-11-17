@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -159,6 +160,8 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
   }
 
   Future<void> bookingRoom({required final RoomEntity room}) async {
+    String id = (10000 + math.Random().nextInt(900000)).toString();
+
     BookingEntity bookingEntity = BookingEntity(
       guestName: guestNameController.text.trim(),
       guestName2: guestName2Controller.text.trim(),
@@ -222,6 +225,8 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
     }
 
     emit(BookingRoomLoading());
+    bookingEntity.bookingID =
+        'INV-$id-${selectedCheckInDate!.year}${selectedCheckInDate!.month}${selectedCheckInDate!.day}';
     final failureOrSuccess = await bookingRepo.addBooking(
       booking: bookingEntity,
     );

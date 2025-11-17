@@ -11,7 +11,7 @@ class BookingEntity {
   final String employeeName;
   final String paidType;
   final String? notes;
-  final int? bookingID;
+  String? bookingID;
 
   BookingEntity({
     this.guestName2,

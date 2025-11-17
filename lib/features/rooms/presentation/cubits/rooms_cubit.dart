@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:palace_systeam_managment/features/rooms/domin/entites/room_entity.dart';
 import 'package:palace_systeam_managment/features/rooms/domin/repos/rooms_repo.dart';
@@ -42,7 +43,7 @@ class RoomsCubit extends Cubit<RoomsState> {
   final List<String> searchTypes = ['جميع الأنواع', 'سينجل', 'دبل', 'جناح'];
 
   // ==================== Filtering ====================
-  void _applyFilters() {
+  void _applyFilters({String query = ''}) {
     if (isClosed) return;
     emit(RoomsLoading());
 
@@ -51,7 +52,7 @@ class RoomsCubit extends Cubit<RoomsState> {
       selectedFloor: selectedFloor,
       searchSelectedStatus: searchSelectedStatus,
       searchSelectedType: searchSelectedType,
-      searchQuery: formController.roomIdController.text.trim(),
+      searchQuery: query.trim(),
     );
 
     emit(RoomsSuccess(rooms: rooms));
@@ -60,7 +61,10 @@ class RoomsCubit extends Cubit<RoomsState> {
   // ==================== Search ====================
   void search(String query) {
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), _applyFilters);
+    _debounce = Timer(
+      const Duration(milliseconds: 300),
+      () => _applyFilters(query: query),
+    );
   }
 
   // ==================== Setters ====================
@@ -82,61 +86,55 @@ class RoomsCubit extends Cubit<RoomsState> {
   }
 
   // ==================== CRUD ====================
+  // ==================== CRUD ====================
   Future<void> fetchRooms() async {
     emit(RoomsLoading());
 
-    final result = await roomsRepo.getAllRooms();
-
-    result.fold(
-      (failure) {
-        emit(RoomsFailure(errMessage: failure.errMessage));
-      },
-      (data) {
-        allRooms = data;
-        rooms = allRooms;
-        emit(RoomsSuccess(rooms: rooms));
-      },
-    );
+    try {
+      final data = await roomsRepo.getAllRooms();
+      data.fold(
+        (failure) => emit(RoomsFailure(errMessage: failure.errMessage)),
+        (fetchedRooms) {
+          allRooms = fetchedRooms;
+          rooms = allRooms;
+          emit(RoomsSuccess(rooms: rooms));
+        },
+      );
+    } catch (e) {
+      emit(RoomsFailure(errMessage: e.toString()));
+    }
   }
 
   Future<void> addNewRoom() async {
-    final form = formController;
-    if (!form.formKey.currentState!.validate()) return;
-
-    final id = int.tryParse(form.roomIdController.text);
-    if (id == null) {
-      emit(RoomsFailure(errMessage: 'يرجى إدخال رقم غرفة صحيح.'));
-      return;
-    }
-
-    final entity = RoomEntity(
-      roomId: id,
-      typeRoom: form.selectedType,
-      floorRoom: form.selectedFloorRoom,
-      descriptionRoom: form.descriptionRoomController.text,
-      pricePerNight: int.tryParse(form.priceController.text)!,
-      statusRoom: form.selectedStatus,
-    );
+    if (!formController.formKey.currentState!.validate()) return;
 
     emit(RoomsLoading());
 
-    final exists = allRooms.any((r) => r.roomId == id);
-    final result =
-        exists
-            ? await roomsRepo.updateRoom(roomEntity: entity)
-            : await newRoomRepo.insertNewRoom(roomEntity: entity);
+    try {
+      final id = int.tryParse(formController.roomIdController.text);
+      if (id == null) throw Exception('يرجى إدخال رقم غرفة صحيح.');
 
-    result.fold(
-      (failure) {
-        if (isClosed) return;
-        emit(RoomsFailure(errMessage: failure.errMessage));
-      },
-      (_) {
-        if (isClosed) return;
-        form.clear();
-        fetchRooms();
-      },
-    );
+      final entity = RoomEntity(
+        roomId: id,
+        typeRoom: formController.selectedType,
+        floorRoom: formController.selectedFloorRoom,
+        descriptionRoom: formController.descriptionRoomController.text,
+        pricePerNight: int.tryParse(formController.priceController.text) ?? 0,
+        statusRoom: formController.selectedStatus,
+      );
+
+      final result = await newRoomRepo.insertNewRoom(roomEntity: entity);
+      result.fold(
+        (failure) => emit(RoomsFailure(errMessage: failure.errMessage)),
+        (_) async {
+          formController.clear();
+          log('Room added: $entity');
+          await fetchRooms(); // تحديث القوائم بعد الإضافة
+        },
+      );
+    } catch (e) {
+      emit(RoomsFailure(errMessage: e.toString()));
+    }
   }
 
   Future<void> deleteRoom(RoomEntity room) async {
@@ -144,16 +142,16 @@ class RoomsCubit extends Cubit<RoomsState> {
       emit(RoomsFailure(errMessage: 'لا يمكن حذف غرفة محجوزة.'));
       return;
     }
-    final result = await roomsRepo.deleteRoom(roomEntity: room);
-    result.fold(
-      (failure) => emit(RoomsFailure(errMessage: failure.errMessage)),
-      (_) => fetchRooms(),
-    );
-  }
 
-  @override
-  Future<void> close() {
-    _debounce?.cancel();
-    return super.close();
+    emit(RoomsLoading());
+    try {
+      final result = await roomsRepo.deleteRoom(roomEntity: room);
+      result.fold(
+        (failure) => emit(RoomsFailure(errMessage: failure.errMessage)),
+        (_) => fetchRooms(),
+      );
+    } catch (e) {
+      emit(RoomsFailure(errMessage: e.toString()));
+    }
   }
 }
