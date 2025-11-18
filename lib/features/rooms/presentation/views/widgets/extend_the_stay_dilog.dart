@@ -7,7 +7,6 @@ import '../../../../../core/di/getit_service_loacator.dart';
 
 import '../../../domin/entites/room_entity.dart';
 import '../../../../booking_management/presentation/cubits/booking_room_cubit.dart';
-import '../../cubits/rooms_cubit.dart';
 import 'extend_the_stay_dilaog_body.dart';
 
 class ExtendTheStayDialog extends StatelessWidget {
@@ -17,7 +16,6 @@ class ExtendTheStayDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider.value(value: getIt<RoomsCubit>()),
         BlocProvider.value(value: getIt<ExtendTheStayCubit>()),
         BlocProvider.value(value: getIt<BookingRoomCubit>()),
       ],

@@ -74,6 +74,14 @@ abstract class AppTextStyles {
     );
   }
 
+  static TextStyle fontWeight400Size16(BuildContext context) {
+    return TextStyle(
+      fontSize: getResponsiveFontSize(context, fontSize: 16),
+      fontWeight: FontWeight.w400,
+      color: AppColors.grey,
+    );
+  }
+
   static TextStyle fontWeight600Size16(BuildContext context) {
     return TextStyle(
       fontSize: getResponsiveFontSize(context, fontSize: 16),

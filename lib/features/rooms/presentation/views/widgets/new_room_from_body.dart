@@ -110,20 +110,22 @@ class NewRoomBody extends StatelessWidget {
               const SizedBox(height: 16),
 
               // حالة الغرفة
-              Customdropdownbuttonfield(
-                value: form.selectedStatus,
-                labelText: 'حالة الغرفة',
-                items:
-                    form.statuses.map((String status) {
-                      return DropdownMenuItem<String>(
-                        value: status,
-                        child: Text(status),
-                      );
-                    }).toList(),
-                onChanged: (String? newValue) {
-                  form.selectedStatus = newValue ?? form.selectedStatus;
-                },
-              ),
+              form.selectedStatus != 'محجوز'
+                  ? Customdropdownbuttonfield(
+                    value: form.selectedStatus,
+                    labelText: 'حالة الغرفة',
+                    items:
+                        form.statuses.map((String status) {
+                          return DropdownMenuItem<String>(
+                            value: status,
+                            child: Text(status),
+                          );
+                        }).toList(),
+                    onChanged: (String? newValue) {
+                      form.selectedStatus = newValue ?? form.selectedStatus;
+                    },
+                  )
+                  : SizedBox.shrink(),
             ],
           ),
         ),

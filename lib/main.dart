@@ -15,6 +15,7 @@ import 'core/di/getit_service_loacator.dart';
 import 'core/routing/app_router.dart';
 import 'core/routing/app_routes.dart';
 import 'core/services/observer_bloc.dart';
+import 'core/services/shared_preferences_service.dart';
 import 'core/utils/app_colors.dart';
 import 'features/rooms/domin/repos/new_room_repo.dart';
 import 'features/rooms/domin/repos/rooms_repo.dart';
@@ -32,6 +33,7 @@ void main() async {
   Bloc.observer = MyBlocObserver();
   await setup();
   await findSystemLocale();
+  await SharedPreferencesService.init();
   runApp(const PalaceSysteamManagment());
 }
 
@@ -64,7 +66,10 @@ class PalaceSysteamManagment extends StatelessWidget {
             ],
             locale: Locale('ar'),
             supportedLocales: S.delegate.supportedLocales,
-            initialRoute: AppRoutes.signInView,
+            initialRoute:
+                SharedPreferencesService.getString('currentUser').isNotEmpty
+                    ? AppRoutes.mainView
+                    : AppRoutes.signInView,
             onGenerateRoute: AppRouter.onGenerateRoute,
             debugShowCheckedModeBanner: false,
             title: 'Palace Systeam Managment',

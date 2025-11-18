@@ -48,6 +48,9 @@ Future<void> setup() async {
     () => CustmersCubit(getIt<CustmerRepo>()),
   );
   getIt.registerSingleton<AuthRepo>(
-    AuthRepoImpl(authService: getIt<AuthService>()),
+    AuthRepoImpl(
+      authService: getIt<AuthService>(),
+      databaseService: getIt<DatabaseService>(),
+    ),
   );
 }

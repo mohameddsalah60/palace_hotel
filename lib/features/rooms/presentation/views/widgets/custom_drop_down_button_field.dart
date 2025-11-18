@@ -24,7 +24,7 @@ class Customdropdownbuttonfield extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labelText,
         prefixIcon: Icon(icon ?? Icons.info_outline, color: AppColors.greyDark),
-        fillColor: fillColor ?? AppColors.greyBorder,
+        fillColor: fillColor ?? AppColors.wheitDark,
         filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),

@@ -16,6 +16,7 @@ class BookingModel extends BookingEntity {
     super.bookingID,
     super.guestName2,
     super.stutasBooking,
+    super.discount,
   });
 
   factory BookingModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +35,7 @@ class BookingModel extends BookingEntity {
       paidType: json['paidType'] ?? '',
       paidAmount: (json['paidAmount'] ?? 0).toDouble(),
       stutasBooking: json['stutasBooking'] ?? '',
+      discount: json['discount'] ?? '0',
     );
   }
   Map<String, dynamic> toMap() {
@@ -52,6 +54,7 @@ class BookingModel extends BookingEntity {
       'paidAmount': paidAmount,
       'stutasBooking': stutasBooking,
       'bookingID': bookingID,
+      'discount': discount,
     };
   }
 
@@ -71,6 +74,7 @@ class BookingModel extends BookingEntity {
       guestName2: entity.guestName2,
       paidAmount: entity.paidAmount,
       stutasBooking: entity.stutasBooking,
+      discount: entity.discount,
     );
   }
 }

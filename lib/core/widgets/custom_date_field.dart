@@ -35,7 +35,7 @@ class CustomDateTimeFormField extends StatelessWidget {
                 ? Icon(suffixIcon, color: colorIcon ?? AppColors.greyDark)
                 : null,
         filled: true,
-        fillColor: AppColors.greyBorder,
+        fillColor: AppColors.wheitDark,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide.none,

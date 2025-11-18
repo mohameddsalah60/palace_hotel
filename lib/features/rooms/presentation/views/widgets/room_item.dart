@@ -5,12 +5,10 @@ import 'package:palace_systeam_managment/core/widgets/custom_snackbar.dart';
 import 'package:palace_systeam_managment/features/rooms/domin/entites/room_entity.dart';
 import 'package:palace_systeam_managment/features/rooms/presentation/views/widgets/extend_the_stay_dilog.dart';
 
-import '../../../../../core/di/getit_service_loacator.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_text_styles.dart';
-import '../../../../booking_management/presentation/cubits/booking_room_cubit.dart';
 import '../../cubits/rooms_cubit.dart';
-import 'booking_room_dialog_body.dart';
+import 'booking_room_dialog.dart';
 import 'new_room_form_dialog.dart';
 import 'room_item_info_row.dart';
 
@@ -19,7 +17,7 @@ class RoomItem extends StatelessWidget {
   final RoomEntity roomEntity;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         if (roomEntity.statusRoom == 'محجوز') {
           showDialog(
@@ -28,30 +26,17 @@ class RoomItem extends StatelessWidget {
               return ExtendTheStayDialog(roomEntity: roomEntity);
             },
           );
-        } else if (roomEntity.statusRoom == 'تحت الصيانة') {
+        } else if (roomEntity.statusRoom == 'تحت الصيانة' ||
+            roomEntity.statusRoom == 'هاوس') {
           customSnackBar(
             context: context,
             message: 'لا يمكن حجز الغرفة لانها تحت الصيانة حاليآ',
           );
         } else {
-          final roomsCubit = context.read<RoomsCubit>();
-          final bookingRoomCubit = getIt<BookingRoomCubit>();
-
           showDialog(
             context: context,
             builder: (_) {
-              return MultiBlocProvider(
-                providers: [
-                  BlocProvider.value(value: roomsCubit),
-                  BlocProvider.value(
-                    value:
-                        bookingRoomCubit..updatePricePerNight(
-                          roomEntity.pricePerNight.toString(),
-                        ),
-                  ),
-                ],
-                child: BookingRoomDialogBody(roomEntity: roomEntity),
-              );
+              return BookingRoomDialog(roomEntity: roomEntity);
             },
           );
         }

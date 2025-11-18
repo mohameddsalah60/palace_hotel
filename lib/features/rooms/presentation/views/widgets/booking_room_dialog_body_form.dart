@@ -5,6 +5,7 @@ import 'package:palace_systeam_managment/core/di/getit_service_loacator.dart';
 import 'package:palace_systeam_managment/features/customers/presentation/cubits/custmers_cubit.dart';
 import 'package:palace_systeam_managment/features/rooms/domin/entites/room_entity.dart';
 
+import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/widgets/custom_text_from_field.dart';
 import '../../../../booking_management/presentation/cubits/booking_room_cubit.dart';
 import 'booking_button.dart';
@@ -41,24 +42,96 @@ class BookingRoomDialogBodyForm extends StatelessWidget {
               SizedBox(height: 16.h),
               PricePerNightField(),
               SizedBox(height: 16.h),
-              SelectPaymentMehodDropDown(),
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'الرجاء اختيار نسبة الخصم';
+                        }
+                        return null;
+                      },
+
+                      value:
+                          context
+                                  .read<BookingRoomCubit>()
+                                  .discountController
+                                  .text
+                                  .isEmpty
+                              ? null
+                              : context
+                                  .read<BookingRoomCubit>()
+                                  .discountController
+                                  .text,
+
+                      items: List.generate(
+                        101,
+                        (i) => DropdownMenuItem(
+                          value: i.toString(),
+                          child: Text('$i%'),
+                        ),
+                      ),
+
+                      onChanged: (value) {
+                        if (value != null) {
+                          context
+                              .read<BookingRoomCubit>()
+                              .discountController
+                              .text = value;
+                          context.read<BookingRoomCubit>().updateDiscount(
+                            value,
+                          );
+                        }
+                      },
+
+                      decoration: InputDecoration(
+                        labelText: 'نسبة الخصم',
+                        prefixIcon: const Icon(
+                          Icons.percent,
+                          color: AppColors.greyDark,
+                        ),
+                        filled: true,
+                        fillColor: AppColors.wheitDark,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
+                        ),
+                        errorStyle: const TextStyle(color: Colors.red),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            color: Colors.red,
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: CustomTextFromField(
+                      controller:
+                          context.read<BookingRoomCubit>().totalPriceController,
+                      keyboardType: TextInputType.number,
+                      labelText: 'الإجمالي',
+                      icon: Icons.price_change_outlined,
+                      isReadOnly: true,
+                      validator: (value) {
+                        if (int.tryParse(value ?? '0') == 0) {
+                          return 'الرجاء ادخال سعر صحيح';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(height: 16.h),
               PaidField(),
               SizedBox(height: 16.h),
-              CustomTextFromField(
-                controller:
-                    context.read<BookingRoomCubit>().employeeNameController,
-                keyboardType: TextInputType.text,
-                labelText: 'اسم الموظف',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'الرجاء ادخال اسم الموظف';
-                  }
-                  return null;
-                },
-                icon: Icons.note_alt_outlined,
-              ),
-
+              SelectPaymentMehodDropDown(),
               SizedBox(height: 16.h),
               CustomTextFromField(
                 validator: (p0) {
@@ -70,7 +143,6 @@ class BookingRoomDialogBodyForm extends StatelessWidget {
                 icon: Icons.note_alt_outlined,
                 maxLines: 3,
               ),
-
               SizedBox(height: 16.h),
               BookingButton(roomEntity: roomEntity),
             ],

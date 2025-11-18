@@ -74,7 +74,7 @@ class CustomTextFromField extends StatelessWidget {
   }) {
     return InputDecoration(
       labelText: labelText,
-      labelStyle: AppTextStyles.fontWeight400Size14(
+      labelStyle: AppTextStyles.fontWeight400Size16(
         context,
       ).copyWith(color: textColor ?? AppColors.black),
       prefixIcon: Icon(icon, color: iconColor ?? AppColors.greyDark),

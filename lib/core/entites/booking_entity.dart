@@ -12,8 +12,10 @@ class BookingEntity {
   final String paidType;
   final String? notes;
   String? bookingID;
+  String? discount;
 
   BookingEntity({
+    this.discount,
     this.guestName2,
     this.bookingID,
     this.stutasBooking,

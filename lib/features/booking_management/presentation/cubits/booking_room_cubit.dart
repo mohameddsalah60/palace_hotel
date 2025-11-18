@@ -35,6 +35,10 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
   );
   final TextEditingController employeeNameController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
+  final TextEditingController discountController = TextEditingController(
+    text: '0',
+  );
+
   DateTime? selectedCheckInDate;
   DateTime? selectedCheckOutDate;
 
@@ -64,6 +68,11 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
 
   void updateCheckOutDate(DateTime date) {
     selectedCheckOutDate = date;
+    _updateNightsAndPrice();
+  }
+
+  void updateDiscount(String value) {
+    discountController.text = value;
     _updateNightsAndPrice();
   }
 
@@ -125,12 +134,22 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
     if (selectedCheckInDate != null && selectedCheckOutDate != null) {
       final nights =
           selectedCheckOutDate!.difference(selectedCheckInDate!).inDays;
+
       nightsCountController.text = getDaysDifferenceText(
         selectedCheckInDate!,
         selectedCheckOutDate!,
       );
+
       final price = int.tryParse(pricePerNightController.text) ?? 0;
-      totalPriceController.text = (nights * price).toString();
+      double total = (nights * price).toDouble();
+
+      final discountPercent = double.tryParse(discountController.text) ?? 0;
+      final discountAmount = total * (discountPercent / 100);
+
+      final finalTotal = total - discountAmount;
+
+      totalPriceController.text = finalTotal.toStringAsFixed(0);
+
       updatePaidAmount(paidAmountController.text);
     }
   }
@@ -176,6 +195,7 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
       paidType: paymentMethod!,
       paidAmount: double.tryParse(paidAmountController.text) ?? 0,
       stutasBooking: 'نشط',
+      discount: discountController.text,
     );
 
     // ✅ تحقق إن الغرفة مش محجوزة في نفس الوقت
@@ -378,6 +398,7 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
     paidAmountController.clear();
     remainingAmountController.clear();
     employeeNameController.clear();
+    discountController.clear();
     paymentMethod = null;
     selectedCheckInDate = null;
     selectedCheckOutDate = null;
@@ -393,63 +414,8 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
     paidAmountController.dispose();
     remainingAmountController.dispose();
     employeeNameController.dispose();
+    discountController.dispose();
     _debounce?.cancel();
     return super.close();
   }
-
-  // Future<void> updateRoomStatusAfterCheckOut() async {
-  //   final now = DateTime.now();
-  //   final today = DateTime(now.year, now.month, now.day);
-
-  //   for (final booking in allBookings) {
-  //     final checkOutDay = DateTime(
-  //       booking.checkOutDate.year,
-  //       booking.checkOutDate.month,
-  //       booking.checkOutDate.day,
-  //     );
-
-  //     // ✅ الشرط الجديد: لو تاريخ الخروج <= النهارده
-  //     final bool isEnded =
-  //         checkOutDay.isBefore(today) || checkOutDay.isAtSameMomentAs(today);
-
-  //     if (isEnded &&
-  //         booking.stutasBooking != 'مكتمل' &&
-  //         booking.stutasBooking != 'ملغي') {
-  //       final roomId = booking.roomID;
-
-  //       debugPrint(
-  //         '🔵 الحجز ${booking.bookingID} انتهى - تحديث حالته إلى مكتمل',
-  //       );
-
-  //       // ✅ نحدث حالة الحجز
-  //       await bookingRepo.updateBookingStatus(
-  //         bookingId: booking.bookingID!,
-  //         newStatus: 'مكتمل',
-  //       );
-
-  //       // ✅ نتحقق لو فيه حجز آخر على نفس الأوضة بعد التاريخ ده
-  //       final hasActiveOrFutureBooking = allBookings.any(
-  //         (b) =>
-  //             b.roomID == roomId &&
-  //             b.stutasBooking != 'ملغي' &&
-  //             b.checkInDate.isAfter(today),
-  //       );
-
-  //       if (hasActiveOrFutureBooking) {
-  //         await bookingRepo.updateRoomStatus(
-  //           roomId: roomId,
-  //           newStatus: 'محجوز',
-  //         );
-  //         debugPrint('🟡 الأوضة $roomId فيها حجز قادم → حالتها محجوزة');
-  //       } else {
-  //         await bookingRepo.updateRoomStatus(roomId: roomId, newStatus: 'متاح');
-  //         debugPrint('🟢 الأوضة $roomId أصبحت متاحة');
-  //       }
-  //     } else {
-  //       debugPrint(
-  //         '⏸️ الحجز ${booking.bookingID} لسه شغال أو حالته مكتملة/ملغية',
-  //       );
-  //     }
-  //   }
-  // }
 }

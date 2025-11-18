@@ -44,7 +44,7 @@ class SelectPaymentMehodDropDown extends StatelessWidget {
               ),
 
               filled: true,
-              fillColor: AppColors.greyBorder,
+              fillColor: AppColors.wheitDark,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide.none,
@@ -60,17 +60,16 @@ class SelectPaymentMehodDropDown extends StatelessWidget {
         SizedBox(width: 16.w),
         Expanded(
           child: CustomTextFromField(
-            controller: context.read<BookingRoomCubit>().totalPriceController,
-            keyboardType: TextInputType.number,
-            labelText: 'الاجمالي',
-            icon: Icons.price_check_outlined,
-            isReadOnly: true,
+            controller: context.read<BookingRoomCubit>().employeeNameController,
+            keyboardType: TextInputType.text,
+            labelText: 'اسم الموظف',
             validator: (value) {
-              if (int.tryParse(value ?? '0') == 0) {
-                return 'الرجاء ادخال سعر صحيح';
+              if (value == null || value.isEmpty) {
+                return 'الرجاء ادخال اسم الموظف';
               }
               return null;
             },
+            icon: Icons.note_alt_outlined,
           ),
         ),
       ],

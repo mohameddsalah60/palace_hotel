@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:palace_systeam_managment/core/widgets/custom_snackbar.dart';
 import 'package:palace_systeam_managment/features/rooms/presentation/cubits/rooms_cubit.dart';
 
-import '../../../../../core/widgets/custom_alert_dialog.dart';
 import '../../../../../core/widgets/custom_button.dart';
 import '../../../domin/entites/room_entity.dart';
 import '../../../../booking_management/presentation/cubits/booking_room_cubit.dart';
@@ -31,9 +30,11 @@ class BookingButton extends StatelessWidget {
           Navigator.pop(context);
         } else if (state is BookingRoomError) {
           context.read<BookingRoomCubit>().clearControls();
-          customAlertDialog(context, state.message, 'خطآ', Colors.red, () {
-            Navigator.pop(context);
-          });
+          customSnackBar(
+            context: context,
+            message: 'فشل في الحجز: ${state.message}',
+            color: Colors.red,
+          );
         }
       },
       child: CustomButton(

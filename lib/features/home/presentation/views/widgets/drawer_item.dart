@@ -10,10 +10,11 @@ class DrawerItem extends StatelessWidget {
     super.key,
     required this.drawerItemEntity,
     this.isSelected = false,
+    this.color,
   });
   final DrawerItemEntity drawerItemEntity;
   final bool isSelected;
-
+  final Color? color;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,7 +30,7 @@ class DrawerItem extends StatelessWidget {
         children: [
           Icon(
             drawerItemEntity.icon,
-            color: isSelected ? AppColors.darkBlue : AppColors.grey,
+            color: isSelected ? AppColors.darkBlue : color ?? AppColors.grey,
             size: 24.sp,
           ),
           SizedBox(width: 16.w),
@@ -39,7 +40,8 @@ class DrawerItem extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
               style: AppTextStyles.fontWeight600Size16(context).copyWith(
-                color: isSelected ? AppColors.darkBlue : AppColors.grey,
+                color:
+                    isSelected ? AppColors.darkBlue : color ?? AppColors.grey,
               ),
             ),
           ),
