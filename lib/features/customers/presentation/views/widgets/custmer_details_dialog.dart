@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:palace_systeam_managment/core/widgets/custom_text_from_field.dart';
 import 'package:palace_systeam_managment/features/customers/presentation/cubits/custmers_cubit.dart';
+import 'package:palace_systeam_managment/features/rooms/presentation/views/widgets/custom_drop_down_button_field.dart';
 
 import '../../../../../core/di/getit_service_loacator.dart';
 import '../../../../../core/utils/app_colors.dart';
@@ -48,7 +49,7 @@ class CustmerDetailsDialogBody extends StatelessWidget {
                     return null;
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 16.h),
                 CustomTextFromField(
                   controller: context.read<CustmersCubit>().custmerIdController,
                   keyboardType: TextInputType.number,
@@ -67,7 +68,7 @@ class CustmerDetailsDialogBody extends StatelessWidget {
                     return null;
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 16.h),
                 CustomTextFromField(
                   controller:
                       context.read<CustmersCubit>().phoneCustmerController,
@@ -88,7 +89,7 @@ class CustmerDetailsDialogBody extends StatelessWidget {
                     return null;
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 16.h),
                 CustomTextFromField(
                   controller:
                       context.read<CustmersCubit>().addressCustmerController,
@@ -102,7 +103,8 @@ class CustmerDetailsDialogBody extends StatelessWidget {
                   labelText: 'العنوان',
                   icon: Icons.location_on,
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 16.h),
+
                 CustomTextFromField(
                   controller:
                       context.read<CustmersCubit>().jobCustmerController,
@@ -113,6 +115,26 @@ class CustmerDetailsDialogBody extends StatelessWidget {
                       return 'هذا الحقل مطلوب';
                     }
                     return null;
+                  },
+                ),
+                SizedBox(height: 16.h),
+                Customdropdownbuttonfield(
+                  value: context.read<CustmersCubit>().selectedRelationship,
+                  labelText: 'الحالة الاجتماعية',
+                  icon: Icons.family_restroom,
+                  items:
+                      context
+                          .read<CustmersCubit>()
+                          .realtionshipOptions
+                          .map(
+                            (option) => DropdownMenuItem<String>(
+                              value: option,
+                              child: Text(option),
+                            ),
+                          )
+                          .toList(),
+                  onChanged: (p0) {
+                    context.read<CustmersCubit>().selectedRelationship = p0!;
                   },
                 ),
                 SizedBox(height: 20.h),

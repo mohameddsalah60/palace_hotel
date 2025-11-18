@@ -30,7 +30,9 @@ Future<void> setup() async {
   getIt.registerSingleton<RoomsRepo>(
     RoomsRepoImpl(databaseService: getIt<DatabaseService>()),
   );
-  getIt.registerSingleton<CustmerRepo>(CustmerRepoImpl());
+  getIt.registerSingleton<CustmerRepo>(
+    CustmerRepoImpl(databaseService: getIt<DatabaseService>()),
+  );
   getIt.registerSingleton<BookingRepo>(
     BookingRepoImpl(databaseService: getIt<DatabaseService>()),
   );

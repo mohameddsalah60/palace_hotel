@@ -7,9 +7,11 @@ class CustmerModel extends CustomerEntity {
     required super.phoneCustmer,
     required super.jobCustmer,
     required super.addressCustmer,
+    required super.relationshipCustmer,
   });
   factory CustmerModel.fromEntity(CustomerEntity customerEntity) {
     return CustmerModel(
+      relationshipCustmer: customerEntity.relationshipCustmer,
       nationalId: customerEntity.nationalId,
       nameCustmer: customerEntity.nameCustmer,
       phoneCustmer: customerEntity.phoneCustmer,
@@ -24,6 +26,7 @@ class CustmerModel extends CustomerEntity {
       'phoneCustmer': phoneCustmer,
       'jobCustmer': jobCustmer,
       'addressCustmer': addressCustmer,
+      'relationshipCustmer': relationshipCustmer,
     };
   }
 
@@ -34,6 +37,7 @@ class CustmerModel extends CustomerEntity {
       phoneCustmer: map['phoneCustmer'] ?? '',
       jobCustmer: map['jobCustmer'] ?? '',
       addressCustmer: map['addressCustmer'] ?? '',
+      relationshipCustmer: map['relationshipCustmer'] ?? '',
     );
   }
 }

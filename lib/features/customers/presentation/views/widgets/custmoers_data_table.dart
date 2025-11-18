@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:palace_systeam_managment/core/widgets/custom_alert_dialog.dart';
 import 'package:palace_systeam_managment/features/customers/domin/entites/customer_entity.dart';
 import 'package:palace_systeam_managment/features/customers/presentation/cubits/custmers_cubit.dart';
-import 'package:palace_systeam_managment/features/customers/presentation/views/widgets/custmer_details_dialog.dart';
 
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/widgets/custom_button_icon.dart';
@@ -65,6 +64,12 @@ class CustmoersDataTable extends StatelessWidget {
 
           DataColumn(
             label: Text(
+              'الحالة الاجتماعية',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          DataColumn(
+            label: Text(
               'الإجراءات',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -79,25 +84,10 @@ class CustmoersDataTable extends StatelessWidget {
               DataCell(Text(customerEntity[index].phoneCustmer)),
               DataCell(Text(customerEntity[index].jobCustmer, maxLines: 1)),
               DataCell(Text(customerEntity[index].addressCustmer)),
+              DataCell(Text(customerEntity[index].relationshipCustmer)),
               DataCell(
                 Row(
                   children: [
-                    CustomButtonIcon(
-                      backgroundColor: AppColors.success,
-                      iconColor: AppColors.wheit,
-                      tooltip: 'تعديل',
-                      icon: Icons.edit,
-                      onPressed: () {
-                        context.read<CustmersCubit>().updateCastomerInfo(
-                          customerEntity[index],
-                        );
-                        showDialog(
-                          context: context,
-                          builder: (context) => CustmerDetailsDialog(),
-                        );
-                      },
-                    ),
-                    SizedBox(width: 8.w),
                     CustomButtonIcon(
                       backgroundColor: AppColors.error,
                       iconColor: AppColors.wheit,

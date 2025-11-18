@@ -20,12 +20,20 @@ class CustmersCubit extends Cubit<CustmersState> {
   final addressCustmerController = TextEditingController();
   final jobCustmerController = TextEditingController();
 
+  final List<String> realtionshipOptions = [
+    'اعزب/ة',
+    'متزوج/ة',
+    'مطلق/ة',
+    'أرمل/ة',
+  ];
+  String selectedRelationship = '';
   void clearControllers() {
     custmerIdController.clear();
     nameCustmerController.clear();
     phoneCustmerController.clear();
     addressCustmerController.clear();
     jobCustmerController.clear();
+    selectedRelationship = 'اعزب/ة';
   }
 
   void updateCastomerInfo(CustomerEntity customer) async {
@@ -34,6 +42,7 @@ class CustmersCubit extends Cubit<CustmersState> {
     phoneCustmerController.text = customer.phoneCustmer;
     addressCustmerController.text = customer.addressCustmer;
     jobCustmerController.text = customer.jobCustmer;
+    selectedRelationship = customer.relationshipCustmer;
   }
 
   void serchCustmer(String query) {
@@ -73,12 +82,11 @@ class CustmersCubit extends Cubit<CustmersState> {
         phoneCustmer: phoneCustmerController.text,
         addressCustmer: addressCustmerController.text,
         jobCustmer: jobCustmerController.text,
+        relationshipCustmer: selectedRelationship,
       );
 
       final existingCustomer = custmers.any(
-        (custmer) =>
-            custmer.nationalId == custmerIdController.text ||
-            custmer.phoneCustmer == phoneCustmerController.text,
+        (custmer) => custmer.nationalId == custmerIdController.text,
       );
 
       if (existingCustomer) {

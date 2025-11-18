@@ -2,15 +2,16 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:palace_systeam_managment/core/errors/api_error_model.dart';
+import 'package:palace_systeam_managment/core/services/database_service.dart';
 import 'package:palace_systeam_managment/features/customers/domin/entites/customer_entity.dart';
 import 'package:palace_systeam_managment/features/customers/domin/repos/custmer_repo.dart';
 
-import '../../../../core/services/local_database.dart';
 import '../models/custmer_model.dart';
 
 class CustmerRepoImpl extends CustmerRepo {
-  final DatabaseHelper databaseHelper = DatabaseHelper.instance;
+  final DatabaseService databaseService;
 
+  CustmerRepoImpl({required this.databaseService});
   @override
   Future<Either<ApiErrorModel, void>> addNewCustmer({
     required CustomerEntity customerEntity,
@@ -18,7 +19,11 @@ class CustmerRepoImpl extends CustmerRepo {
     try {
       Map<String, dynamic> custmerData =
           CustmerModel.fromEntity(customerEntity).toMap();
-      await databaseHelper.insertData(table: 'custmers', row: custmerData);
+      await databaseService.addData(
+        path: 'custmers',
+        data: custmerData,
+        docId: customerEntity.nationalId,
+      );
       log('custmer inserted successfully: $custmerData');
       return right(null);
     } catch (e) {
@@ -32,11 +37,11 @@ class CustmerRepoImpl extends CustmerRepo {
     required CustomerEntity customerEntity,
   }) async {
     try {
-      await databaseHelper.deleteData(
-        table: 'custmers',
-        id: customerEntity.nationalId,
-        idColumn: 'nationalId',
+      await databaseService.deleteData(
+        path: 'custmers',
+        supPath: customerEntity.nationalId,
       );
+      log('custmer deleted successfully: ${customerEntity.nationalId}');
       return right(null);
     } catch (e) {
       log(e.toString());
@@ -47,9 +52,12 @@ class CustmerRepoImpl extends CustmerRepo {
   @override
   Future<Either<ApiErrorModel, List<CustomerEntity>>> getAllCustmers() async {
     try {
-      final custmersData = await databaseHelper.queryAllData(table: 'custmers');
-      final custmers =
-          custmersData.map((data) => CustmerModel.fromMap(data)).toList();
+      final custmersData = await databaseService.getData(path: 'custmers');
+      List<CustomerEntity> custmers =
+          (custmersData as List<dynamic>)
+                  .map((data) => CustmerModel.fromMap(data))
+                  .toList()
+              as List<CustomerEntity>;
       return right(custmers);
     } catch (e) {
       log(e.toString());
@@ -64,11 +72,11 @@ class CustmerRepoImpl extends CustmerRepo {
     try {
       Map<String, dynamic> custmer =
           CustmerModel.fromEntity(customerEntity).toMap();
-      await databaseHelper.updateData(
-        row: custmer,
-        table: 'custmers',
-        id: customerEntity.nationalId,
-        idColumn: 'nationalId',
+      await databaseService.updateData(
+        path: 'custmers',
+        oldVALUE: {'nationalId': customerEntity.nationalId},
+        supPath: customerEntity.nationalId,
+        newVALUE: custmer,
       );
       return right(null);
     } catch (e) {
