@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:palace_systeam_managment/core/widgets/custom_snackbar.dart';
 import 'package:palace_systeam_managment/features/booking_management/presentation/cubits/booking_room_cubit.dart';
 import 'package:palace_systeam_managment/features/booking_management/presentation/views/widgets/print_fatora_button.dart';
-import 'package:palace_systeam_managment/features/rooms/presentation/cubits/rooms_cubit.dart';
 
 import '../../../../../core/entites/booking_entity.dart';
 import '../../../../../core/utils/app_colors.dart';
