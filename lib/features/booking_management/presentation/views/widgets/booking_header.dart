@@ -6,6 +6,8 @@ import 'package:palace_systeam_managment/features/booking_management/presentatio
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_text_styles.dart';
 import '../../../../../core/widgets/custom_search_field.dart';
+import '../../../../../core/widgets/custom_snackbar.dart';
+import '../../../../rooms/presentation/cubits/rooms_cubit.dart';
 import '../../../domin/entites/booking_status_entity.dart';
 import 'booking_status_card.dart';
 
@@ -71,7 +73,24 @@ class BookingStatusCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BookingRoomCubit, BookingRoomState>(
+    return BlocConsumer<BookingRoomCubit, BookingRoomState>(
+      listener: (context, state) {
+        if (state is UpdateStateBooking) {
+          customSnackBar(
+            context: context,
+            message: 'تم تحديث حالة الحجز بنجاح',
+            color: Colors.green,
+          );
+          context.read<RoomsCubit>().fetchRooms();
+        } else if (state is DeleteBooking) {
+          customSnackBar(
+            context: context,
+            message: 'تم حذف الحجز بنجاح',
+            color: Colors.green,
+          );
+          context.read<RoomsCubit>().fetchRooms();
+        }
+      },
       builder: (context, state) {
         return Row(
           children: [

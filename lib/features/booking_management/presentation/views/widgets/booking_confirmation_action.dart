@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:palace_systeam_managment/features/booking_management/presentation/cubits/booking_room_cubit.dart';
-import 'package:palace_systeam_managment/features/rooms/presentation/cubits/rooms_cubit.dart';
 
 import '../../../../../core/entites/booking_entity.dart';
 import '../../../../../core/widgets/custom_alert_dialog.dart';
@@ -33,7 +32,6 @@ class BookingConfirmationAction extends StatelessWidget {
                       booking: booking,
                       status: 'مكتمل',
                     );
-                    context.read<RoomsCubit>().fetchRooms();
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },
@@ -66,8 +64,6 @@ class BookingConfirmationAction extends StatelessWidget {
                       booking: booking,
                       status: 'ملغي',
                     );
-                    context.read<RoomsCubit>().fetchRooms();
-
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },
