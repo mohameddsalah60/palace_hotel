@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_text_styles.dart';
 import '../../../../../core/widgets/custom_search_field.dart';
+import '../../cubit/employee_cubit.dart';
 import 'show_add_employee_dialog.dart';
 
 class EmployeesViewHeader extends StatelessWidget {
@@ -29,7 +31,9 @@ class EmployeesViewHeader extends StatelessWidget {
           SizedBox(
             width: 600.w,
             child: CustomSearchField(
-              onChanged: (value) {},
+              onChanged: (value) {
+                context.read<EmployeeCubit>().serchEmployee(value);
+              },
               hintText: 'ابحث برقم الهوية أو الاسم...',
             ),
           ),
