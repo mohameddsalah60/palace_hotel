@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:palace_systeam_managment/features/booking_management/presentation/views/booking_management_view.dart';
+import 'package:palace_systeam_managment/features/auth/domin/repo/auth_repo.dart';
 
 import '../../../customers/presentation/views/customers_view.dart';
 import '../../../employee_management/presentation/views/employees_view.dart';
@@ -9,7 +10,10 @@ import '../../domin/entites/drawer_item_entity.dart';
 part 'page_changed_state.dart';
 
 class PageChangedCubit extends Cubit<PageChangedState> {
-  PageChangedCubit() : super(PageChangedInitial());
+  final AuthRepo authRepo;
+
+  PageChangedCubit(this.authRepo) : super(PageChangedInitial());
+
   final List<DrawerItemEntity> items = [
     // DrawerItemEntity(
     //   title: 'اللوحة الرئيسية',
@@ -40,8 +44,19 @@ class PageChangedCubit extends Cubit<PageChangedState> {
     DrawerItemEntity(title: 'الإعدادات', icon: Icons.settings_outlined),
   ];
   int activeIndex = 0;
+
   void changePage(int index) {
     activeIndex = index;
     emit(PageChangedSuccess());
+  }
+
+  Future<void> logout() async {
+    emit(PageChangedLogoutLoading());
+    final result = await authRepo.signOut();
+
+    result.fold(
+      (failure) => emit(PageChangedLogoutFailure(message: failure.errMessage)),
+      (_) => emit(PageChangedLogoutSuccess()),
+    );
   }
 }

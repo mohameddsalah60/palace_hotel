@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:palace_systeam_managment/features/auth/domin/repo/auth_repo.dart';
 import 'package:palace_systeam_managment/features/home/presentation/cubits/page_changed_cubit.dart';
 import 'package:intl/intl_standalone.dart'
     if (dart.library.html) 'package:intl/intl_browser.dart';
@@ -49,7 +50,9 @@ class PalaceSysteamManagment extends StatelessWidget {
       builder: (_, child) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider(create: (context) => PageChangedCubit()),
+            BlocProvider(
+              create: (context) => PageChangedCubit(getIt<AuthRepo>()),
+            ),
             BlocProvider(
               create:
                   (context) =>

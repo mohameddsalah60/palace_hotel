@@ -112,7 +112,7 @@ class AuthRepoImpl extends AuthRepo {
   Future<Either<ApiErrorModel, void>> signOut() async {
     try {
       await authService.signOut();
-
+      await SharedPreferencesService.remove('currentUser');
       return right(null);
     } on CustomException catch (e) {
       return left(AppErrorManager.handle(e));
