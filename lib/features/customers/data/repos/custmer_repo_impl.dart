@@ -39,7 +39,7 @@ class CustmerRepoImpl extends CustmerRepo {
     try {
       await databaseService.deleteData(
         path: 'custmers',
-        supPath: customerEntity.nationalId,
+        value: customerEntity.nationalId,
       );
       log('custmer deleted successfully: ${customerEntity.nationalId}');
       return right(null);

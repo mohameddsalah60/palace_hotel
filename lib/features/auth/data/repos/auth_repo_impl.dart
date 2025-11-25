@@ -8,11 +8,11 @@ import 'package:palace_systeam_managment/core/errors/error_messages.dart';
 import 'package:palace_systeam_managment/core/errors/exceptions.dart';
 import 'package:palace_systeam_managment/core/services/auth_service.dart';
 import 'package:palace_systeam_managment/core/services/database_service.dart';
-import 'package:palace_systeam_managment/features/auth/data/models/user_model.dart';
-import 'package:palace_systeam_managment/features/auth/domin/enities/user_entity.dart';
+import 'package:palace_systeam_managment/core/models/user_model.dart';
+import 'package:palace_systeam_managment/core/entites/user_entity.dart';
 
 import '../../../../core/services/shared_preferences_service.dart';
-import '../../domin/enities/permissions_users.dart';
+import '../../../../core/entites/permissions_users.dart';
 import '../../domin/repo/auth_repo.dart';
 
 class AuthRepoImpl extends AuthRepo {
@@ -42,6 +42,8 @@ class AuthRepoImpl extends AuthRepo {
           phone: user.phoneNumber ?? '',
           email: email,
           token: user.uid,
+          nid: '',
+          jopTitle: '',
           permissions: PermissionsUsers(
             canAddRoom: false,
             canEditRoom: false,

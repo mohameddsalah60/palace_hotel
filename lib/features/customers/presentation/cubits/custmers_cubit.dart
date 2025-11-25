@@ -26,7 +26,7 @@ class CustmersCubit extends Cubit<CustmersState> {
     'مطلق/ة',
     'أرمل/ة',
   ];
-  String selectedRelationship = '';
+  String selectedRelationship = 'اعزب/ة';
   void clearControllers() {
     custmerIdController.clear();
     nameCustmerController.clear();

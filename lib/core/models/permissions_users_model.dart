@@ -1,4 +1,4 @@
-import '../../domin/enities/permissions_users.dart';
+import '../entites/permissions_users.dart';
 
 class PermissionsUsersModel extends PermissionsUsers {
   PermissionsUsersModel({

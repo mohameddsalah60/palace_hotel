@@ -34,4 +34,42 @@ class FirebaseAuthService implements AuthService {
       rethrow;
     }
   }
+
+  @override
+  Future<void> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) {
+    try {
+      return FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<User> createUserWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      return userCredential.user!;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteAccount() {
+    try {
+      return FirebaseAuth.instance.currentUser!.delete();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

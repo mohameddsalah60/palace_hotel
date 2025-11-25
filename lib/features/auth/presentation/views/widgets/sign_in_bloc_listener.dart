@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:palace_systeam_managment/core/routing/app_routes.dart';
 
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/widgets/custom_loading_alert.dart';
@@ -30,6 +31,7 @@ class SignInBlocListener extends StatelessWidget {
             message: 'تم تسجيل الدخول بنجاح',
             color: AppColors.success,
           );
+          Navigator.pushReplacementNamed(context, AppRoutes.mainView);
         }
       },
       child: SizedBox.shrink(),

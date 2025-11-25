@@ -6,6 +6,8 @@ import 'package:palace_systeam_managment/features/auth/domin/repo/auth_repo.dart
 import 'package:palace_systeam_managment/features/booking_management/data/repos/booking_repo_impl.dart';
 import 'package:palace_systeam_managment/features/booking_management/domin/repos/booking_repo.dart';
 import 'package:palace_systeam_managment/features/customers/domin/repos/custmer_repo.dart';
+import 'package:palace_systeam_managment/features/employee_management/data/repo/employee_repo_impl.dart';
+import 'package:palace_systeam_managment/features/employee_management/domain/repositories/employee_repo.dart';
 import 'package:palace_systeam_managment/features/rooms/data/repos/new_room_repo_impl.dart';
 import 'package:palace_systeam_managment/features/rooms/domin/repos/new_room_repo.dart';
 import 'package:palace_systeam_managment/features/rooms/domin/repos/rooms_repo.dart';
@@ -51,6 +53,12 @@ Future<void> setup() async {
   );
   getIt.registerSingleton<AuthRepo>(
     AuthRepoImpl(
+      authService: getIt<AuthService>(),
+      databaseService: getIt<DatabaseService>(),
+    ),
+  );
+  getIt.registerSingleton<EmployeeRepo>(
+    EmployeeRepoImpl(
       authService: getIt<AuthService>(),
       databaseService: getIt<DatabaseService>(),
     ),
