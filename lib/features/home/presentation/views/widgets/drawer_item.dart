@@ -22,27 +22,32 @@ class DrawerItem extends StatelessWidget {
       padding: EdgeInsets.all(16.r),
       margin: EdgeInsets.symmetric(vertical: 4.r, horizontal: 8.r),
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.lightBlue : AppColors.wheit,
-        borderRadius: BorderRadius.circular(16.r),
+        color: isSelected ? AppColors.blue : AppColors.darkbblue,
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow:
+            isSelected
+                ? [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8.r,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+                : [],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
-            drawerItemEntity.icon,
-            color: isSelected ? AppColors.darkBlue : color ?? AppColors.grey,
-            size: 24.sp,
-          ),
+          Icon(drawerItemEntity.icon, color: AppColors.wheit, size: 24.sp),
           SizedBox(width: 16.w),
           Expanded(
             child: Text(
               drawerItemEntity.title,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
-              style: AppTextStyles.fontWeight600Size16(context).copyWith(
-                color:
-                    isSelected ? AppColors.darkBlue : color ?? AppColors.grey,
-              ),
+              style: AppTextStyles.fontWeight600Size16(
+                context,
+              ).copyWith(color: AppColors.wheit),
             ),
           ),
         ],

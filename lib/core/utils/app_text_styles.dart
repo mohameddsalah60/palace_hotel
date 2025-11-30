@@ -59,6 +59,22 @@ abstract class AppTextStyles {
     );
   }
 
+  static TextStyle fontWeight500Size16(BuildContext context) {
+    return TextStyle(
+      fontSize: getResponsiveFontSize(context, fontSize: 16),
+      fontWeight: FontWeight.w500,
+      color: AppColors.greyDark,
+    );
+  }
+
+  static TextStyle fontWeight500Size20(BuildContext context) {
+    return TextStyle(
+      fontSize: getResponsiveFontSize(context, fontSize: 20),
+      fontWeight: FontWeight.w500,
+      color: AppColors.textFieldSecondary,
+    );
+  }
+
   static TextStyle fontWeight400Size12(BuildContext context) {
     return TextStyle(
       fontSize: getResponsiveFontSize(context, fontSize: 12),
@@ -77,6 +93,14 @@ abstract class AppTextStyles {
   static TextStyle fontWeight400Size16(BuildContext context) {
     return TextStyle(
       fontSize: getResponsiveFontSize(context, fontSize: 16),
+      fontWeight: FontWeight.w400,
+      color: AppColors.grey,
+    );
+  }
+
+  static TextStyle fontWeight400Size20(BuildContext context) {
+    return TextStyle(
+      fontSize: getResponsiveFontSize(context, fontSize: 20),
       fontWeight: FontWeight.w400,
       color: AppColors.grey,
     );
