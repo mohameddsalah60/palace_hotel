@@ -49,6 +49,7 @@ class AuthRepoImpl extends AuthRepo {
             canEditRoom: false,
             canDeleteRoom: false,
             canViewRooms: false,
+            canAddDiscountOver20: false,
             canCreateBooking: false,
             canEditBooking: false,
             canCancelBooking: false,

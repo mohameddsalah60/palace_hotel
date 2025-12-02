@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:palace_systeam_managment/core/helpers/get_user.dart';
 import 'package:palace_systeam_managment/core/utils/app_colors.dart';
 import 'package:palace_systeam_managment/core/widgets/custom_alert_dialog.dart';
 import 'package:palace_systeam_managment/core/widgets/custom_snackbar.dart';
@@ -45,17 +46,24 @@ class NewrRoomBlocBuilder extends StatelessWidget {
                   ),
                   child: IconButton(
                     onPressed: () {
-                      customAlertDialog(
-                        context,
-                        'هل انت متأكد من حذف الغرفة رقم (${roomEntity!.roomId})؟',
-                        'انتبه',
-                        AppColors.red,
-                        () {
-                          context.read<RoomsCubit>().deleteRoom(roomEntity!);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                      );
+                      if (getUser().permissions.canDeleteRoom) {
+                        customAlertDialog(
+                          context,
+                          'هل انت متأكد من حذف الغرفة رقم (${roomEntity!.roomId})؟',
+                          'انتبه',
+                          AppColors.red,
+                          () {
+                            context.read<RoomsCubit>().deleteRoom(roomEntity!);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        );
+                      } else {
+                        customSnackBar(
+                          context: context,
+                          message: 'عفوأ لا تمتلك الصلاحية',
+                        );
+                      }
                     },
                     tooltip: 'حذف الغرفة',
                     icon: Icon(Icons.delete_outline, color: AppColors.red),

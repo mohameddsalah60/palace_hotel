@@ -24,6 +24,7 @@ class AddNewEmployeeCubit extends Cubit<AddNewEmployeeState> {
     canAddRoom: false,
     canEditRoom: false,
     canDeleteRoom: false,
+    canAddDiscountOver20: false,
     canViewRooms: true,
     canCreateBooking: false,
     canEditBooking: false,

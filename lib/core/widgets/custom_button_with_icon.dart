@@ -29,7 +29,7 @@ class CustomButtonWithIcon extends StatelessWidget {
     final bool isWhite = bg == Colors.white || bg == AppColors.wheit;
 
     return SizedBox(
-      height: height ?? 48.h,
+      height: height ?? 53.h,
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all(bg),
@@ -47,7 +47,9 @@ class CustomButtonWithIcon extends StatelessWidget {
           ),
           elevation: WidgetStateProperty.all(isWhite ? 0 : 2),
           textStyle: WidgetStateProperty.all(
-            AppTextStyles.fontWeight600Size16(context),
+            AppTextStyles.fontWeight600Size16(
+              context,
+            ).copyWith(fontFamily: 'Cairo'),
           ),
         ),
 

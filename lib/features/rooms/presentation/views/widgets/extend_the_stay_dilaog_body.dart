@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/utils/app_colors.dart';
-import '../../../../../core/utils/app_text_styles.dart';
+import '../../../../../core/widgets/custom_title_and_subtitle_dialog_header.dart';
 import '../../../domin/entites/room_entity.dart';
 import 'extend_the_stay_dilaog_body_form.dart';
 
@@ -14,13 +14,15 @@ class ExtendTheStayDilaogBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      titlePadding: EdgeInsets.all(0),
+      contentPadding: EdgeInsets.all(16.r),
       backgroundColor: AppColors.wheit,
-      title: Text(
-        'تمديد الاقامة - غرفة رقم : ${roomEntity.roomId} (${roomEntity.typeRoom})',
-        style: AppTextStyles.fontWeight700Size16(
-          context,
-        ).copyWith(color: AppColors.blackLight, fontSize: 20.sp),
+      title: CustomTitleAndSubtitleDialogHeader(
+        title:
+            'تمديد الاقامة - غرفة : ${roomEntity.roomId} (${roomEntity.typeRoom})',
+        subTitle: 'املأ البيانات التالية لتمديد الحجز',
       ),
+
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
       elevation: 10,
       content: Padding(

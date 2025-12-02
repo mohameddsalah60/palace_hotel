@@ -26,6 +26,7 @@ class PermissionsUsersModel extends PermissionsUsers {
     required super.canManageServices,
     required super.canChangeSettings,
     required super.canViewReports,
+    required super.canAddDiscountOver20,
   });
 
   factory PermissionsUsersModel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +36,7 @@ class PermissionsUsersModel extends PermissionsUsers {
       canEditRoom: json['canEditRoom'] ?? false,
       canDeleteRoom: json['canDeleteRoom'] ?? false,
       canViewRooms: json['canViewRooms'] ?? false,
+      canAddDiscountOver20: json["canAddDiscountOver20"] ?? false,
 
       // Bookings
       canCreateBooking: json['canCreateBooking'] ?? false,
@@ -76,6 +78,7 @@ class PermissionsUsersModel extends PermissionsUsers {
       canEditRoom: entity.canEditRoom,
       canDeleteRoom: entity.canDeleteRoom,
       canViewRooms: entity.canViewRooms,
+      canAddDiscountOver20: entity.canAddDiscountOver20,
 
       canCreateBooking: entity.canCreateBooking,
       canEditBooking: entity.canEditBooking,
@@ -112,6 +115,7 @@ class PermissionsUsersModel extends PermissionsUsers {
       'canEditRoom': canEditRoom,
       'canDeleteRoom': canDeleteRoom,
       'canViewRooms': canViewRooms,
+      'canAddDiscountOver20': canAddDiscountOver20,
 
       // Bookings
       'canCreateBooking': canCreateBooking,

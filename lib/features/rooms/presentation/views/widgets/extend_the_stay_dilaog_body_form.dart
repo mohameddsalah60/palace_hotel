@@ -34,8 +34,6 @@ class ExtendTheStayDilaogBodyForm extends StatelessWidget {
             key: extendCubit.formKey,
             child: Column(
               children: [
-                SizedBox(height: 16.h),
-
                 // اسم النزيل
                 _infoBox(
                   icon: Icons.person,

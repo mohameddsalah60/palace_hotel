@@ -11,6 +11,7 @@ import 'package:palace_systeam_managment/features/home/presentation/cubits/page_
 import 'package:intl/intl_standalone.dart'
     if (dart.library.html) 'package:intl/intl_browser.dart';
 import 'package:palace_systeam_managment/features/rooms/presentation/cubits/rooms_cubit.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'core/di/getit_service_loacator.dart';
 import 'core/routing/app_router.dart';
@@ -25,6 +26,17 @@ import 'generated/l10n.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+
+  WindowOptions windowOptions = const WindowOptions(fullScreen: false);
+  await windowManager.setMinimumSize(const Size(1400, 900));
+
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.maximize();
+    await windowManager.setTitle("Palace Hotel Management System");
+    await windowManager.show();
+    await windowManager.focus();
+  });
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: false,

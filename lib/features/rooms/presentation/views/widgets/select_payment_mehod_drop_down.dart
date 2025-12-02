@@ -63,6 +63,7 @@ class SelectPaymentMehodDropDown extends StatelessWidget {
             controller: context.read<BookingRoomCubit>().employeeNameController,
             keyboardType: TextInputType.text,
             labelText: 'اسم الموظف',
+            isReadOnly: true,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'الرجاء ادخال اسم الموظف';

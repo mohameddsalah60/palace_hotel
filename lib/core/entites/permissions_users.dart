@@ -4,6 +4,7 @@ class PermissionsUsers {
   final bool canEditRoom;
   final bool canDeleteRoom;
   final bool canViewRooms;
+  final bool canAddDiscountOver20;
 
   // Bookings Permissions
   final bool canCreateBooking;
@@ -43,6 +44,7 @@ class PermissionsUsers {
     required this.canEditRoom,
     required this.canDeleteRoom,
     required this.canViewRooms,
+    required this.canAddDiscountOver20,
 
     // Bookings
     required this.canCreateBooking,
@@ -82,6 +84,7 @@ class PermissionsUsers {
     bool? canEditRoom,
     bool? canDeleteRoom,
     bool? canViewRooms,
+    bool? canAddDiscountOver20,
 
     bool? canCreateBooking,
     bool? canEditBooking,
@@ -113,6 +116,7 @@ class PermissionsUsers {
       canEditRoom: canEditRoom ?? this.canEditRoom,
       canDeleteRoom: canDeleteRoom ?? this.canDeleteRoom,
       canViewRooms: canViewRooms ?? this.canViewRooms,
+      canAddDiscountOver20: canAddDiscountOver20 ?? this.canAddDiscountOver20,
 
       canCreateBooking: canCreateBooking ?? this.canCreateBooking,
       canEditBooking: canEditBooking ?? this.canEditBooking,

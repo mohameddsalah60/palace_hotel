@@ -154,4 +154,12 @@ class RoomsCubit extends Cubit<RoomsState> {
       emit(RoomsFailure(errMessage: e.toString()));
     }
   }
+
+  int countRoomsByStatus(String status) {
+    try {
+      return allRooms.where((room) => room.statusRoom == status).length;
+    } catch (e) {
+      return 0;
+    }
+  }
 }

@@ -15,6 +15,7 @@ class SearchAndFilterTypeBar extends StatelessWidget {
     final roomsCubit = context.watch<RoomsCubit>();
 
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16.r),
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
         color: AppColors.wheit,

@@ -8,10 +8,10 @@ class CustomAppbarHeaderWidget extends StatelessWidget {
     super.key,
     required this.title,
     required this.subtitle,
-    required this.actions,
+    this.actions,
   });
   final String title, subtitle;
-  final Widget actions;
+  final Widget? actions;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,7 +25,7 @@ class CustomAppbarHeaderWidget extends StatelessWidget {
       padding: EdgeInsets.all(16.r),
       child: ListTile(
         contentPadding: EdgeInsets.zero,
-        title: Text(title, style: AppTextStyles.fontWeight700Size20(context)),
+        title: Text(title, style: AppTextStyles.fontWeight700Size24(context)),
         subtitle: Padding(
           padding: EdgeInsets.only(top: 6.h),
           child: Text(

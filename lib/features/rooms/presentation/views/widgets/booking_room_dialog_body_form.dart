@@ -47,9 +47,6 @@ class BookingRoomDialogBodyForm extends StatelessWidget {
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'الرجاء اختيار نسبة الخصم';
-                        }
                         return null;
                       },
 

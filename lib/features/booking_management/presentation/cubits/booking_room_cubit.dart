@@ -4,6 +4,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:palace_systeam_managment/core/helpers/get_user.dart';
 import 'package:palace_systeam_managment/features/booking_management/domin/repos/booking_repo.dart';
 
 import '../../../../core/entites/booking_entity.dart';
@@ -33,7 +34,9 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
   final TextEditingController remainingAmountController = TextEditingController(
     text: '0',
   );
-  final TextEditingController employeeNameController = TextEditingController();
+  final TextEditingController employeeNameController = TextEditingController(
+    text: getUser().name,
+  );
   final TextEditingController notesController = TextEditingController();
   final TextEditingController discountController = TextEditingController(
     text: '0',
@@ -58,6 +61,7 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
 
   void updatePricePerNight(String value) {
     pricePerNightController.text = value;
+    employeeNameController.text = getUser().name;
     _updateNightsAndPrice();
   }
 
@@ -197,7 +201,11 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
       stutasBooking: 'نشط',
       discount: discountController.text,
     );
-
+    if (int.parse(discountController.text) >= 20 &&
+        !getUser().permissions.canAddDiscountOver20) {
+      emit(BookingRoomError(message: 'لا يمكن اضافة خصم اكتر من 20%'));
+      return;
+    }
     // ✅ تحقق إن الغرفة مش محجوزة في نفس الوقت
     final hasConflict = allBookings.any((b) {
       if (b.roomID != room.roomId) return false;
