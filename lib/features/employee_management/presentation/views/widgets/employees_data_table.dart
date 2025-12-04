@@ -11,13 +11,8 @@ class EmployeesDataTable extends StatelessWidget {
   final List<UserEntity> employees;
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(16.r)),
-        color: AppColors.wheit,
-      ),
-      padding: EdgeInsets.symmetric(vertical: 16.r, horizontal: 16.r),
       child: DataTable(
         dataRowMaxHeight: 75.h,
         columnSpacing: 24.w,

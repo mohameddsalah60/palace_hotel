@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:palace_systeam_managment/core/di/getit_service_loacator.dart';
-import 'package:palace_systeam_managment/core/widgets/custom_alert_dialog.dart';
-import 'package:palace_systeam_managment/core/widgets/custom_snackbar.dart';
-import 'package:palace_systeam_managment/features/employee_management/presentation/cubit/employee_state.dart';
+
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/widgets/custom_appbar_header_widget.dart';
 import '../../domain/repositories/employee_repo.dart';
 import '../cubit/employee_cubit.dart';
-import 'widgets/employees_data_table.dart';
-import 'widgets/employees_view_header.dart';
+import 'widgets/employees_bloc_consumer.dart';
+import 'widgets/employees_serach_bar.dart';
 
 class EmployeesView extends StatelessWidget {
   const EmployeesView({super.key});
@@ -21,48 +20,32 @@ class EmployeesView extends StatelessWidget {
           (context) => EmployeeCubit(getIt<EmployeeRepo>())..fetchEmployees(),
       child: Scaffold(
         backgroundColor: AppColors.wheitDark,
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0.r, vertical: 24.r),
-          child: Column(
-            children: [
-              EmployeesViewHeader(),
-              SizedBox(height: 24.h),
-              BlocConsumer<EmployeeCubit, EmployeeState>(
-                listener: (context, state) {
-                  if (state is EmployeeError) {
-                    customAlertDialog(
-                      context,
-                      state.message,
-                      'error',
-                      AppColors.red,
-                      () {
-                        Navigator.pop(context);
-                      },
-                    );
-                  } else if (state is EmployeeSuccess) {
-                    customSnackBar(
-                      context: context,
-                      message: 'تم الحذف بنجاح',
-                      color: AppColors.success,
-                    );
-                  }
-                },
-                builder: (context, state) {
-                  if (state is EmployeeLoading) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.mainBlue,
-                      ),
-                    );
-                  } else if (state is EmployeeLoaded) {
-                    return EmployeesDataTable(employees: state.employees);
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                },
+        body: Column(
+          children: [
+            CustomAppbarHeaderWidget(
+              title: 'إدارة الموظفين',
+              subtitle: 'عرض وإدارة بيانات جميع الموظفين في الفندق',
+            ),
+
+            SizedBox(height: 24.h),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(16.r)),
+                color: AppColors.wheit,
               ),
-            ],
-          ),
+              padding: EdgeInsets.symmetric(vertical: 16.r, horizontal: 16.r),
+              margin: EdgeInsets.symmetric(horizontal: 32.r),
+              child: Column(
+                children: [
+                  EmployeesSerachBar(),
+                  SizedBox(height: 24.h),
+
+                  EmployeesBlocConsumer(),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

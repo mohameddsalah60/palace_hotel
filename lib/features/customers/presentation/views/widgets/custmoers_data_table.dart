@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:palace_systeam_managment/core/helpers/get_user.dart';
 import 'package:palace_systeam_managment/core/widgets/custom_alert_dialog.dart';
 import 'package:palace_systeam_managment/features/customers/domin/entites/customer_entity.dart';
 import 'package:palace_systeam_managment/features/customers/presentation/cubits/custmers_cubit.dart';
 
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/widgets/custom_button_icon.dart';
+import '../../../../../core/widgets/custom_snackbar.dart';
 
 class CustmoersDataTable extends StatelessWidget {
   const CustmoersDataTable({super.key, required this.customerEntity});
   final List<CustomerEntity> customerEntity;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(16.r)),
-        color: AppColors.wheit,
-      ),
-      padding: EdgeInsets.all(16.r),
+    return SizedBox(
+      width: MediaQuery.sizeOf(context).width,
       child: DataTable(
         dataRowMaxHeight: 75.h,
         columnSpacing: 24.w,
@@ -89,23 +86,30 @@ class CustmoersDataTable extends StatelessWidget {
                 Row(
                   children: [
                     CustomButtonIcon(
-                      backgroundColor: AppColors.error,
+                      backgroundColor: AppColors.red,
                       iconColor: AppColors.wheit,
                       tooltip: 'حذف',
                       icon: Icons.delete,
                       onPressed: () {
-                        customAlertDialog(
-                          context,
-                          'هل انت متآكد من حذف بيانات العميل؟',
-                          'تاكيد التغييرات',
-                          AppColors.penaltyRed,
-                          () {
-                            context.read<CustmersCubit>().deleteCustmer(
-                              customerEntity[index],
-                            );
-                            Navigator.pop(context);
-                          },
-                        );
+                        if (getUser().permissions.canDeleteGuest) {
+                          customAlertDialog(
+                            context,
+                            'هل انت متآكد من حذف بيانات العميل؟',
+                            'تاكيد التغييرات',
+                            AppColors.red,
+                            () {
+                              context.read<CustmersCubit>().deleteCustmer(
+                                customerEntity[index],
+                              );
+                              Navigator.pop(context);
+                            },
+                          );
+                        } else {
+                          customSnackBar(
+                            context: context,
+                            message: 'عفوا لا تمتلك صلاحية',
+                          );
+                        }
                       },
                     ),
                   ],

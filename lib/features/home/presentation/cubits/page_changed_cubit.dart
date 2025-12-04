@@ -5,7 +5,6 @@ import 'package:palace_systeam_managment/features/auth/domin/repo/auth_repo.dart
 
 import '../../../customers/presentation/views/customers_view.dart';
 import '../../../employee_management/presentation/views/employees_view.dart';
-import '../../../reports_dashboard/presentation/views/reports_dashboard_view.dart';
 import '../../../rooms/presentation/views/rooms_view.dart';
 import '../../domin/entites/drawer_item_entity.dart';
 part 'page_changed_state.dart';
@@ -31,11 +30,11 @@ class PageChangedCubit extends Cubit<PageChangedState> {
       icon: Icons.receipt_long_outlined,
       page: BookingManagementView(),
     ),
-    DrawerItemEntity(
-      title: 'إدارة التقارير',
-      icon: Icons.bar_chart_outlined,
-      page: ReportsDashboardView(),
-    ),
+    // DrawerItemEntity(
+    //   title: 'إدارة التقارير',
+    //   icon: Icons.bar_chart_outlined,
+    //   page: ReportsDashboardView(),
+    // ),
     DrawerItemEntity(
       title: 'إدارة النزلاء',
       icon: Icons.people_alt_outlined,

@@ -19,7 +19,7 @@ class CustmersCubit extends Cubit<CustmersState> {
   final phoneCustmerController = TextEditingController();
   final addressCustmerController = TextEditingController();
   final jobCustmerController = TextEditingController();
-
+  String? selectedSortType = 'الاحدث اولآ';
   final List<String> realtionshipOptions = [
     'اعزب/ة',
     'متزوج/ة',
@@ -138,5 +138,14 @@ class CustmersCubit extends Cubit<CustmersState> {
         emit(CustmersLoaded(custmers));
       },
     );
+  }
+
+  void sortCustmers(String sortType) {
+    if (sortType == "الاحدث اولآ") {
+      custmers.sort((a, b) => b.nameCustmer.compareTo(a.nameCustmer));
+    } else if (sortType == "الاقدم اولآ") {
+      custmers.sort((a, b) => a.nameCustmer.compareTo(b.nameCustmer));
+    }
+    emit(CustmersLoaded(List.from(custmers)));
   }
 }
