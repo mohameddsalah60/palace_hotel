@@ -1,1 +1,54 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"palace-hotel-37af8","appId":"1:162535504391:android:e112cfabe275a72b4648a2","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"palace-hotel-37af8","appId":"1:162535504391:ios:ac41acb34a815f564648a2","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"macos":{"default":{"projectId":"palace-hotel-37af8","appId":"1:162535504391:ios:ac41acb34a815f564648a2","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"palace-hotel-37af8","configurations":{"android":"1:162535504391:android:e112cfabe275a72b4648a2","ios":"1:162535504391:ios:ac41acb34a815f564648a2","macos":"1:162535504391:ios:ac41acb34a815f564648a2","web":"1:162535504391:web:4ae7bdc4923827574648a2","windows":"1:162535504391:web:2fe23fa41ec92e7b4648a2"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "palace-hotel-37af8",
+          "appId": "1:162535504391:android:e112cfabe275a72b4648a2",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "palace-hotel-37af8",
+          "appId": "1:162535504391:ios:ac41acb34a815f564648a2",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "palace-hotel-37af8",
+          "appId": "1:162535504391:ios:ac41acb34a815f564648a2",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "palace-hotel-37af8",
+          "configurations": {
+            "android": "1:162535504391:android:e112cfabe275a72b4648a2",
+            "ios": "1:162535504391:ios:ac41acb34a815f564648a2",
+            "macos": "1:162535504391:ios:ac41acb34a815f564648a2",
+            "web": "1:162535504391:web:4ae7bdc4923827574648a2",
+            "windows": "1:162535504391:web:2fe23fa41ec92e7b4648a2"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
+}

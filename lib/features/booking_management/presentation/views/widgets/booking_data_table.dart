@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:palace_systeam_managment/core/entites/booking_entity.dart';
 import '../../../../../core/di/getit_service_loacator.dart';
 import '../../../../../core/utils/app_colors.dart';
-import '../../../../rooms/presentation/cubits/rooms_cubit.dart';
 import '../../cubits/booking_room_cubit.dart';
 import 'booking_confirmation_dialog.dart';
 
@@ -38,6 +37,12 @@ class BookingDataTable extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.r),
             ),
             columns: const [
+              DataColumn(
+                label: Text(
+                  'رقم الحجز',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
               DataColumn(
                 label: Text(
                   'رقم الغرفة',
@@ -106,11 +111,9 @@ class BookingDataTable extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      final roomsCubit = getIt<RoomsCubit>();
                       return MultiBlocProvider(
                         providers: [
                           BlocProvider.value(value: getIt<BookingRoomCubit>()),
-                          BlocProvider.value(value: roomsCubit),
                         ],
                         child: BookingConfirmationDialog(booking: booking),
                       );
@@ -118,6 +121,7 @@ class BookingDataTable extends StatelessWidget {
                   );
                 },
                 cells: [
+                  DataCell(Text(booking.bookingID.toString())),
                   DataCell(Text(booking.roomID.toString())),
                   DataCell(Text(booking.guestName!)),
                   DataCell(

@@ -9,6 +9,7 @@ import 'package:palace_systeam_managment/features/booking_management/domin/repos
 
 import '../../../../core/entites/booking_entity.dart';
 import '../../../rooms/domin/entites/room_entity.dart';
+import 'bookings_filter_helper.dart';
 
 part 'booking_room_state.dart';
 
@@ -56,7 +57,11 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
     'وى كاش',
     'اتصالات كاش',
   ];
-
+  String searchQuery = '';
+  String statusFilter = 'الكل';
+  String sortFilter = 'الاحدث اولآ';
+  DateTime? fromDate;
+  DateTime? toDate;
   Timer? _debounce;
 
   void updatePricePerNight(String value) {
@@ -201,10 +206,12 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
       stutasBooking: 'نشط',
       discount: discountController.text,
     );
-    if (int.parse(discountController.text) >= 20 &&
-        !getUser().permissions.canAddDiscountOver20) {
-      emit(BookingRoomError(message: 'لا يمكن اضافة خصم اكتر من 20%'));
-      return;
+    if (discountController.text.isNotEmpty || discountController.text != '') {
+      if (int.parse(discountController.text) >= 20 &&
+          !getUser().permissions.canAddDiscountOver20) {
+        emit(BookingRoomError(message: 'لا يمكن اضافة خصم اكتر من 20%'));
+        return;
+      }
     }
     // ✅ تحقق إن الغرفة مش محجوزة في نفس الوقت
     final hasConflict = allBookings.any((b) {
@@ -396,6 +403,20 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
         getBookings();
       },
     );
+  }
+
+  void applyFilters() {
+    final result = BookingFilterHelper.filterBookings(
+      allBookings: allBookings,
+      query: searchQuery,
+      status: statusFilter,
+      fromDate: fromDate,
+      toDate: toDate,
+      sort: sortFilter,
+    );
+
+    filteredBookings = result;
+    emit(BookingGetDataSuccess(bookings: filteredBookings));
   }
 
   void clearControls() {
