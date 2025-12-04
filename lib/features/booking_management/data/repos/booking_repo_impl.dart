@@ -9,6 +9,7 @@ import 'package:palace_systeam_managment/core/models/booking_model.dart';
 import 'package:palace_systeam_managment/core/services/database_service.dart';
 
 import '../../domin/repos/booking_repo.dart';
+import '../../../../core/services/email_service.dart';
 
 class BookingRepoImpl extends BookingRepo {
   final DatabaseService databaseService;
@@ -60,6 +61,19 @@ class BookingRepoImpl extends BookingRepo {
         oldVALUE: {'statusRoom': 'محجوز'},
         supPath: booking.roomID.toString(),
         newVALUE: booking.roomID,
+      );
+      final emailService = EmailService();
+
+      emailService.sendBookingEmail(
+        guestName: booking.guestName.toString(),
+        roomID: booking.roomID,
+        totalPrice: booking.totalPrice,
+        paidAmount: booking.paidAmount,
+        remainingAmount: booking.totalPrice - booking.paidAmount,
+        checkInDate: DateTime.parse(booking.checkInDate.toString()),
+        checkOutDate: DateTime.parse(booking.checkOutDate.toString()),
+        ownerEmail: "tktkyttttttttttk@gmail.com",
+        empolyee: booking.employeeName,
       );
 
       return right(null);
