@@ -45,7 +45,7 @@ class PageChangedCubit extends Cubit<PageChangedState> {
       icon: Icons.person_pin,
       page: EmployeesView(),
     ),
-    DrawerItemEntity(title: 'حول البرنامج', icon: Icons.info_outline),
+    // DrawerItemEntity(title: 'حول البرنامج', icon: Icons.info_outline),
     DrawerItemEntity(title: 'الإعدادات', icon: Icons.settings_outlined),
   ];
   int activeIndex = 0;

@@ -19,7 +19,7 @@ class BookingManagementView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.wheitDark,
       body: BlocProvider.value(
-        value: getIt<BookingRoomCubit>()..getBookings(),
+        value: getIt<BookingRoomCubit>(),
         child: BookingManagementBody(),
       ),
     );

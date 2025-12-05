@@ -14,7 +14,9 @@ import 'bookings_filter_helper.dart';
 part 'booking_room_state.dart';
 
 class BookingRoomCubit extends Cubit<BookingRoomState> {
-  BookingRoomCubit(this.bookingRepo) : super(BookingRoomInitial());
+  BookingRoomCubit(this.bookingRepo) : super(BookingRoomInitial()) {
+    getBookings();
+  }
 
   final BookingRepo bookingRepo;
   final formKey = GlobalKey<FormState>();
