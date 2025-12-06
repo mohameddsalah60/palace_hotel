@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:palace_systeam_managment/features/booking_management/presentation/views/booking_management_view.dart';
 import 'package:palace_systeam_managment/features/auth/domin/repo/auth_repo.dart';
+import 'package:palace_systeam_managment/features/settings/presentation/views/settings_view.dart';
 
 import '../../../customers/presentation/views/customers_view.dart';
 import '../../../employee_management/presentation/views/employees_view.dart';
@@ -46,7 +47,11 @@ class PageChangedCubit extends Cubit<PageChangedState> {
       page: EmployeesView(),
     ),
     // DrawerItemEntity(title: 'حول البرنامج', icon: Icons.info_outline),
-    DrawerItemEntity(title: 'الإعدادات', icon: Icons.settings_outlined),
+    DrawerItemEntity(
+      title: 'الإعدادات',
+      icon: Icons.settings_outlined,
+      page: SettingsView(),
+    ),
   ];
   int activeIndex = 0;
 

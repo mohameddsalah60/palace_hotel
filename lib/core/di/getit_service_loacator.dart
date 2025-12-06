@@ -14,6 +14,8 @@ import 'package:palace_systeam_managment/features/rooms/domin/repos/rooms_repo.d
 import 'package:palace_systeam_managment/features/booking_management/presentation/cubits/booking_room_cubit.dart';
 import 'package:palace_systeam_managment/features/rooms/presentation/cubits/extend_the_stay_cubit.dart';
 import 'package:palace_systeam_managment/features/rooms/presentation/cubits/rooms_cubit.dart';
+import 'package:palace_systeam_managment/features/settings/data/repo/change_password_repo_impl.dart';
+import 'package:palace_systeam_managment/features/settings/domin/repo/change_password_repo.dart';
 
 import '../../features/customers/data/repos/custmer_repo_impl.dart';
 import '../../features/customers/presentation/cubits/custmers_cubit.dart';
@@ -62,5 +64,8 @@ Future<void> setup() async {
       authService: getIt<AuthService>(),
       databaseService: getIt<DatabaseService>(),
     ),
+  );
+  getIt.registerSingleton<ChangePasswordRepo>(
+    ChangePasswordRepoImpl(authService: getIt<AuthService>()),
   );
 }

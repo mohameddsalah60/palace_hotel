@@ -16,4 +16,10 @@ abstract class AuthService {
     required String email,
     required String password,
   });
+
+  Future changePassword({
+    required String email,
+    required String oldPassword,
+    required String newPassword,
+  });
 }
