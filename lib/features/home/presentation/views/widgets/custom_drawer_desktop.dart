@@ -46,6 +46,8 @@ class CustomDrawerDesktop extends StatelessWidget {
                   children: [
                     Text(
                       'فندق بالاس',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.fontWeight700Size20(
                         context,
                       ).copyWith(color: AppColors.wheit),
@@ -53,6 +55,8 @@ class CustomDrawerDesktop extends StatelessWidget {
                     SizedBox(height: 8.h),
                     Text(
                       'نظام الادارة',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.fontWeight400Size14(
                         context,
                       ).copyWith(color: AppColors.greyCheckBox),

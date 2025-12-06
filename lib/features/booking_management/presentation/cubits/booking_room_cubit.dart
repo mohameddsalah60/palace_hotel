@@ -294,6 +294,7 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
         log('Fetched bookings: $bookings');
         allBookings = bookings; // نحفظ الأصلية
         filteredBookings = List.from(bookings); // نبدأ منها
+        filteredBookings.sort((a, b) => b.checkInDate.compareTo(a.checkInDate));
         // await updateRoomStatusAfterCheckOut();
         emit(BookingGetDataSuccess(bookings: filteredBookings));
       },
