@@ -169,13 +169,9 @@ class BookingFiltersBar extends StatelessWidget {
 
                   labelText:
                       '${DateTime.now().year}-${DateTime.now().month}-${1}',
-                  firstDate: DateTime(
-                    DateTime.now().year,
-                    DateTime.now().month,
-                    1,
-                  ),
-                  lastDate: DateTime(DateTime.now().year + 1),
-
+                  firstDate: DateTime(DateTime.now().year, 1, 1),
+                  lastDate: DateTime.now(),
+                  initialDate: DateTime.now(),
                   onChanged: (date) {
                     context.read<BookingRoomCubit>().fromDate = date;
                     context.read<BookingRoomCubit>().applyFilters();
@@ -198,12 +194,9 @@ class BookingFiltersBar extends StatelessWidget {
                   suffixIcon: Icons.calendar_today,
                   labelText:
                       '${DateTime.now().year}-${DateTime.now().month}-${DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day}',
-                  firstDate: DateTime(
-                    DateTime.now().year,
-                    DateTime.now().month,
-                    1,
-                  ),
-                  lastDate: DateTime(DateTime.now().year + 1),
+                  firstDate: DateTime(DateTime.now().year, 1, 1),
+                  lastDate: DateTime.now(),
+                  initialDate: DateTime.now(),
                   onChanged: (date) {
                     context.read<BookingRoomCubit>().toDate = date;
                     context.read<BookingRoomCubit>().applyFilters();

@@ -10,6 +10,7 @@ import 'package:palace_systeam_managment/features/booking_management/presentatio
 import 'widgets/booking_data_table.dart';
 import 'widgets/booking_search_and_filter.dart';
 import 'widgets/booking_status.dart';
+import 'widgets/extract_data_dilaog.dart';
 
 class BookingManagementView extends StatelessWidget {
   const BookingManagementView({super.key});
@@ -38,8 +39,15 @@ class BookingManagementBody extends StatelessWidget {
             title: 'إدارة الحجوزات',
             subtitle: 'عرض وإدارة جميع حجوزات الفندق',
             actions: CustomButtonWithIcon(
-              text: 'اضافة حجز جديد',
-              icon: Icons.add,
+              text: 'تصدير تقرير الحجوزات',
+              icon: Icons.print,
+              backgroundColor: Colors.green,
+              onPressed: () {
+                extractBookingDataDialog(
+                  context: context,
+                  bookings: context.read<BookingRoomCubit>().allBookings,
+                );
+              },
             ),
           ),
           SizedBox(height: 24.h),
