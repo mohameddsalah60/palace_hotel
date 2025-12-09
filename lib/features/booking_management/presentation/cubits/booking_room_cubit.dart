@@ -44,6 +44,7 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
   final TextEditingController discountController = TextEditingController(
     text: '0',
   );
+  StreamSubscription? _streamSubscription;
 
   DateTime? selectedCheckInDate;
   DateTime? selectedCheckOutDate;
@@ -284,21 +285,24 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
 
   Future<void> getBookings() async {
     emit(BookingRoomLoading());
-    final failureOrSuccess = await bookingRepo.getAllBookings();
-    failureOrSuccess.fold(
-      (failure) {
-        clearControls();
-        emit(BookingRoomError(message: failure.errMessage));
-      },
-      (bookings) async {
-        log('Fetched bookings: $bookings');
-        allBookings = bookings; // نحفظ الأصلية
-        filteredBookings = List.from(bookings); // نبدأ منها
-        filteredBookings.sort((a, b) => b.checkInDate.compareTo(a.checkInDate));
-        // await updateRoomStatusAfterCheckOut();
-        emit(BookingGetDataSuccess(bookings: filteredBookings));
-      },
-    );
+    _streamSubscription = bookingRepo.getAllBookings().listen((result) {
+      result.fold(
+        (failure) {
+          clearControls();
+          emit(BookingRoomError(message: failure.errMessage));
+        },
+        (bookings) async {
+          log('Fetched bookings: $bookings');
+          allBookings = bookings;
+          filteredBookings = List.from(bookings);
+          filteredBookings.sort(
+            (a, b) => b.checkInDate.compareTo(a.checkInDate),
+          );
+          // await updateRoomStatusAfterCheckOut();
+          emit(BookingGetDataSuccess(bookings: filteredBookings));
+        },
+      );
+    });
   }
 
   void search(String query) {
@@ -448,6 +452,7 @@ class BookingRoomCubit extends Cubit<BookingRoomState> {
     employeeNameController.dispose();
     discountController.dispose();
     _debounce?.cancel();
+    _streamSubscription?.cancel();
     return super.close();
   }
 }

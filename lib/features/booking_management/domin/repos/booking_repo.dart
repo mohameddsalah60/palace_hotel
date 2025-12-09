@@ -7,7 +7,7 @@ abstract class BookingRepo {
   Future<Either<ApiErrorModel, void>> addBooking({
     required BookingEntity booking,
   });
-  Future<Either<ApiErrorModel, List<BookingEntity>>> getAllBookings();
+  Stream<Either<ApiErrorModel, List<BookingEntity>>> getAllBookings();
   Future<Either<ApiErrorModel, void>> updateBooking(BookingEntity booking);
   Future<Either<ApiErrorModel, void>> deleteBooking(String bookingId);
   Future<void> updateBookingStatus({required BookingEntity booking});

@@ -94,19 +94,18 @@ class BookingRepoImpl extends BookingRepo {
   }
 
   @override
-  Future<Either<ApiErrorModel, List<BookingEntity>>> getAllBookings() async {
+  Stream<Either<ApiErrorModel, List<BookingEntity>>> getAllBookings() async* {
     try {
-      final bookingsData = await databaseService.getData(path: 'bookings');
-      final List<BookingEntity> bookings =
-          (bookingsData as List<dynamic>)
-              .map(
-                (item) => BookingModel.fromJson(item as Map<String, dynamic>),
-              )
-              .toList();
-      return right(bookings);
+      await for (var data in databaseService.streamData(path: 'bookings')) {
+        List<BookingEntity> orders =
+            (data as List<dynamic>)
+                .map<BookingEntity>((e) => BookingModel.fromJson(e))
+                .toList();
+        yield Right(orders);
+      }
     } catch (e) {
       log(e.toString());
-      return left(DataBaseFailure(errMessage: e.toString()));
+      yield left(DataBaseFailure(errMessage: e.toString()));
     }
   }
 
