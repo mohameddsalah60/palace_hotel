@@ -81,14 +81,12 @@ class BookingStatusCards extends StatelessWidget {
             message: 'تم تحديث حالة الحجز بنجاح',
             color: Colors.green,
           );
-          context.read<RoomsCubit>().fetchRooms();
         } else if (state is DeleteBooking) {
           customSnackBar(
             context: context,
             message: 'تم حذف الحجز بنجاح',
             color: Colors.green,
           );
-          context.read<RoomsCubit>().fetchRooms();
         }
       },
       builder: (context, state) {

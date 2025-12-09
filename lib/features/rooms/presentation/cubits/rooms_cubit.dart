@@ -22,6 +22,7 @@ class RoomsCubit extends Cubit<RoomsState> {
   List<RoomEntity> rooms = [];
 
   Timer? _debounce;
+  StreamSubscription? _streamSubscription;
 
   List<String> floors = [
     'الكل',
@@ -85,21 +86,20 @@ class RoomsCubit extends Cubit<RoomsState> {
     _applyFilters();
   }
 
-  // ==================== CRUD ====================
-  // ==================== CRUD ====================
   Future<void> fetchRooms() async {
     emit(RoomsLoading());
 
     try {
-      final data = await roomsRepo.getAllRooms();
-      data.fold(
-        (failure) => emit(RoomsFailure(errMessage: failure.errMessage)),
-        (fetchedRooms) {
-          allRooms = fetchedRooms;
-          rooms = allRooms;
-          emit(RoomsSuccess(rooms: rooms));
-        },
-      );
+      _streamSubscription = roomsRepo.getAllRooms().listen((result) {
+        result.fold(
+          (failure) => emit(RoomsFailure(errMessage: failure.errMessage)),
+          (fetchedRooms) {
+            allRooms = fetchedRooms;
+            rooms = allRooms;
+            emit(RoomsSuccess(rooms: rooms));
+          },
+        );
+      });
     } catch (e) {
       emit(RoomsFailure(errMessage: e.toString()));
     }
@@ -161,5 +161,11 @@ class RoomsCubit extends Cubit<RoomsState> {
     } catch (e) {
       return 0;
     }
+  }
+
+  @override
+  Future<void> close() {
+    _streamSubscription?.cancel();
+    return super.close();
   }
 }

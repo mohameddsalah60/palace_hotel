@@ -4,7 +4,7 @@ import '../../../../core/errors/api_error_model.dart';
 import '../entites/room_entity.dart';
 
 abstract class RoomsRepo {
-  Future<Either<ApiErrorModel, List<RoomEntity>>> getAllRooms();
+  Stream<Either<ApiErrorModel, List<RoomEntity>>> getAllRooms();
   Future<Either<ApiErrorModel, void>> deleteRoom({
     required RoomEntity roomEntity,
   });

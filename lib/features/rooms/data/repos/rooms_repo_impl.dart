@@ -29,17 +29,18 @@ class RoomsRepoImpl implements RoomsRepo {
   }
 
   @override
-  Future<Either<ApiErrorModel, List<RoomEntity>>> getAllRooms() async {
+  Stream<Either<ApiErrorModel, List<RoomEntity>>> getAllRooms() async* {
     try {
-      final roomsData = await databaseService.getData(path: 'rooms');
-      final List<RoomEntity> rooms =
-          roomsData.map<RoomEntity>((data) => RoomModel.fromMap(data)).toList();
-
-      log('Fetched ${rooms.length} rooms from database.');
-      return right(rooms);
+      await for (var data in databaseService.streamData(path: 'rooms')) {
+        List<RoomEntity> orders =
+            (data as List<dynamic>)
+                .map<RoomEntity>((e) => RoomModel.fromMap(e))
+                .toList();
+        yield Right(orders);
+      }
     } catch (e) {
       log(e.toString());
-      return left(DataBaseFailure(errMessage: e.toString()));
+      yield left(DataBaseFailure(errMessage: e.toString()));
     }
   }
 

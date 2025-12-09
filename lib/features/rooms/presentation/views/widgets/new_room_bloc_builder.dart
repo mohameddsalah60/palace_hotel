@@ -20,7 +20,6 @@ class NewrRoomBlocBuilder extends StatelessWidget {
       listener: (context, state) {
         if (state is RoomsFailure) {
           customSnackBar(context: context, message: state.errMessage);
-          context.read<RoomsCubit>().fetchRooms();
         }
       },
       child: AlertDialog(

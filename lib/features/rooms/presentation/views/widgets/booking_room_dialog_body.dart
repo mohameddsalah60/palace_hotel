@@ -24,7 +24,6 @@ class BookingRoomDialogBody extends StatelessWidget {
             message: 'تم الحجز بنجاح',
             color: Colors.green,
           );
-          context.read<RoomsCubit>().fetchRooms();
 
           context.read<BookingRoomCubit>()
             ..getBookings()

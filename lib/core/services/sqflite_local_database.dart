@@ -156,4 +156,9 @@ class SqfliteLocalDatabase implements DatabaseService {
     );
     log("🟢 Updated '$path' with new value => $newVALUE");
   }
+
+  @override
+  Stream streamData({required String path, Map<String, dynamic>? query}) {
+    throw UnimplementedError();
+  }
 }
