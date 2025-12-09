@@ -59,6 +59,7 @@ dependencies:
   sqflite_common_ffi: ^2.3.6
   window_manager: ^0.5.1
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
@@ -94,3 +95,14 @@ flutter:
   # see https://flutter.dev/to/font-from-package
 flutter_intl:
   enabled: true
+
+flutter_icons:
+  image_path: "assets/images/palace_logo_trans.png"
+
+  windows:
+    generate: true
+    image_path: "assets/images/palace_logo_trans.png"
+
+  macos:
+    generate: true
+    image_path: "assets/images/palace_logo_trans.png"
