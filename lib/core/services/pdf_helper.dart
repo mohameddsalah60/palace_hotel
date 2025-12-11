@@ -318,26 +318,23 @@ class PdfHelper {
     final formatted =
         '${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)}';
 
-    final safeGuest = (booking.guestName ?? 'Guest').replaceAll(
-      RegExp(r'[^\u0600-\u06FF0-9_]'),
-      '_',
-    );
-
-    final fileName = 'فاتورة_$safeGuest$formatted.pdf';
+    final fileName = 'فاتورة_${booking.guestName}$formatted.pdf';
 
     if (Platform.isWindows || Platform.isMacOS) {
       final exeDir = Directory.current.path;
       final invoicesDir = Directory('$exeDir/Invoices');
-      if (!await invoicesDir.exists())
+      if (!await invoicesDir.exists()) {
         await invoicesDir.create(recursive: true);
+      }
       return '${invoicesDir.path}/$fileName';
     }
 
     if (Platform.isIOS) {
       final dir = await getApplicationDocumentsDirectory();
       final invoicesDir = Directory(p.join(dir.path, "Invoices"));
-      if (!await invoicesDir.exists())
+      if (!await invoicesDir.exists()) {
         await invoicesDir.create(recursive: true);
+      }
       return p.join(invoicesDir.path, fileName);
     }
 

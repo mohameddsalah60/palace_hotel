@@ -109,7 +109,12 @@ Future<void> exportBookingsToExcel({
     file.writeAsBytesSync(fileBytes);
     log("✔ تم حفظ التقرير هنا: $filePath");
 
-    // فتح الملف بعد الحفظ
-    await OpenFilex.open(file.path);
+    try {
+      if (Platform.isWindows || Platform.isMacOS || Platform.isIOS) {
+        await OpenFilex.open(file.path);
+      }
+    } catch (e) {
+      log("⚠ لم يتم فتح الملف تلقائياً. الملف محفوظ في: $filePath");
+    }
   }
 }
