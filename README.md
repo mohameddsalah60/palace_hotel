@@ -86,9 +86,9 @@ This is a Hotel Management System project I worked on. The goal was to implement
 
 ## Project Structure
 
-- **features/**: Contains separate folders for Rooms, Booking, Customers, Employees. Each feature has Cubit/Bloc and UI.  
-- **core/**: Shared utilities, constants, theme definitions, and custom widgets.  
-- **data/**: Repositories and Firebase data sources.  
+- **features/**: Contains separate folders for Rooms, Booking, Customers, Employees،settings. Each feature has Cubit/Bloc and UI.  
+- **core/**: Shared utilities, constants, services,functions helpers,error handler,di and custom widgets.  
+- **data/**: Repositories and models and Firebase data sources.  
 - **domain/**: Entities, use cases, and repository interfaces.  
 - **presentation/**: Screens and Cubits managing state for each feature.
 
