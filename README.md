@@ -38,6 +38,7 @@ This is a Hotel Management System project I worked on. The goal was to implement
 ![Booking Room](https://github.com/user-attachments/assets/6964d607-dff9-426f-8845-f36b4eec9b66)  
 ![Booking View](https://github.com/user-attachments/assets/d7476898-4533-4548-8002-8af6123df681)  
 ![Booking Detail](https://github.com/user-attachments/assets/be8bc0dc-873f-428b-8d86-1a4a982c49ff)
+![Extend Booking](https://github.com/user-attachments/assets/255ce2da-a239-4e2a-a819-cd6f0f034026)
 
 ---
 
