@@ -18,9 +18,7 @@ Future<void> exportBookingsToExcel({
             b.checkOutDate.isBefore(to.add(Duration(days: 1)));
       }).toList();
 
-  if (filtered.isEmpty) {
-    return;
-  }
+  if (filtered.isEmpty) return;
 
   final excel = Excel.createExcel();
   final sheet = excel['الحجوزات'];
@@ -52,15 +50,15 @@ Future<void> exportBookingsToExcel({
     final cell = sheet.cell(
       CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0),
     );
-    cell.value = TextCellValue(header[i]); // لازم TextCellValue
+    cell.value = TextCellValue(header[i]);
     cell.cellStyle = headerStyle;
   }
+
   CellStyle dataStyle = CellStyle(
     horizontalAlign: HorizontalAlign.Center,
     verticalAlign: VerticalAlign.Center,
   );
 
-  // إضافة الصفوف
   for (int row = 0; row < filtered.length; row++) {
     final b = filtered[row];
     List<dynamic> values = [
@@ -81,29 +79,37 @@ Future<void> exportBookingsToExcel({
       final cell = sheet.cell(
         CellIndex.indexByColumnRow(columnIndex: col, rowIndex: row + 1),
       );
-      cell.value = TextCellValue(
-        values[col].toString(),
-      ); // تحويل كل حاجة لـ TextCellValue
+      cell.value = TextCellValue(values[col].toString());
       cell.cellStyle = dataStyle;
     }
   }
 
-  // فولدر داخل البرنامج
-  final appDir = await getApplicationDocumentsDirectory();
-  final bookingFolder = Directory("${appDir.path}/الحجوزات");
-  if (!bookingFolder.existsSync()) bookingFolder.createSync(recursive: true);
-
-  final filePath =
-      "${bookingFolder.path}/booking-${from.year}/${from.month}/${from.day}-${to.year}/${to.month}/${to.day}.xlsx";
+  // تحديد مسار الحفظ حسب المنصة
+  String filePath;
+  if (Platform.isWindows || Platform.isMacOS) {
+    final exeDir = Directory.current.path;
+    final bookingFolder = Directory('$exeDir/Bookings');
+    if (!bookingFolder.existsSync()) bookingFolder.createSync(recursive: true);
+    filePath =
+        "${bookingFolder.path}/booking-${from.year}-${from.month}-${from.day}_to_${to.year}-${to.month}-${to.day}.xlsx";
+  } else if (Platform.isIOS) {
+    final dir = await getApplicationDocumentsDirectory();
+    final bookingFolder = Directory("${dir.path}/Bookings");
+    if (!bookingFolder.existsSync()) bookingFolder.createSync(recursive: true);
+    filePath =
+        "${bookingFolder.path}/booking-${from.year}-${from.month}-${from.day}_to_${to.year}-${to.month}-${to.day}.xlsx";
+  } else {
+    throw Exception("Unsupported platform");
+  }
 
   final fileBytes = excel.encode();
   if (fileBytes != null) {
-    File(filePath)
-      ..createSync(recursive: true)
-      ..writeAsBytesSync(fileBytes);
+    final file = File(filePath);
+    file.createSync(recursive: true);
+    file.writeAsBytesSync(fileBytes);
+    log("✔ تم حفظ التقرير هنا: $filePath");
+
+    // فتح الملف بعد الحفظ
+    await OpenFilex.open(file.path);
   }
-
-  log("✔ تم حفظ التقرير هنا: $filePath");
-
-  await OpenFilex.open(filePath);
 }
